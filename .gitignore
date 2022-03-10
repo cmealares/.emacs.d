@@ -1,11 +1,23 @@
-# Compiled
 *.elc
-
-# Packaging
-.cask
-
-# Backup files
 *~
+.cache
+.dap-breakpoints
+.lsp-session*
+.smex-items
+/auto-save-list
+/custom.el
+/elpa
+/projectile-bookmarks.eld
+/projectile.cache
+/recentf
+/savefile
+/saveplace
+/server
+/smex-items
+/themes
+/tramp
+/transient
+/url
+network-security.data
 
-# Undo-tree save-files
-*.~undo-tree
+/cme-config/sap*

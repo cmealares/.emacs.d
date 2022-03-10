@@ -147,11 +147,11 @@
 ;;; -----------------------------------------------------------------------
 ;;;; LOAD PATH
 ;;; -----------------------------------------------------------------------
-(defconst cme-site-lisp-dir (expand-file-name "site-lisp" user-emacs-directory)
-  "Additional modules are installed here")
-
 (defconst cme-config-dir (expand-file-name "cme-config" user-emacs-directory)
   "My configuration files")
+
+(defconst cme-site-lisp-dir (expand-file-name "site-lisp" user-emacs-directory)
+  "Additional modules are installed here")
 
 (add-to-list 'load-path cme-site-lisp-dir)
 (add-to-list 'load-path cme-config-dir)
@@ -716,7 +716,7 @@
   :ensure t
   :pin melpa
   :bind (("C-x g" . magit-status)
-         ;("C-x M-g" . magit-dispatch); C-c M-g: magit-file-dispatch
+         ;;("C-x M-g" . magit-dispatch); C-c M-g: magit-file-dispatch
          )
   :config
   (setq magit-completing-read-function 'ivy-completing-read)
@@ -728,9 +728,6 @@
 ;;; https://gitlab.com/pidu/git-timemachine
 ;;; -----------------------------------------------------------------------
 ;;(use-package git-timemachine)
-
-;; for pull requests on Github and Gitlab
-;; https://github.com/magit/forge
 
 ;;; -----------------------------------------------------------------------
 ;;;; FLYCHECK
@@ -935,9 +932,8 @@
 ;;(load "setup-haskell.el")
 ;;(load "setup-python.el")
 
+;; (load "sap-misc.el")
 (load "sap-browse.el")
-;; no longer used (load "corp.el")
-
 
 ;;; -----------------------------------------------------------------------
 ;;;; SERVER MODE for emacsclient
