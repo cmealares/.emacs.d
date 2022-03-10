@@ -1,0 +1,4 @@
+* emacs.d
+
+This is my personal emacs configuration.
+It's always a work in progress and it's always broken.
