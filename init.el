@@ -9,7 +9,7 @@
 ;; emacs -Q -batch -f batch-byte-compile toto.el
 
 ;;; -----------------------------------------------------------------------
-;;; USEFUL COMMANDS that I have a hard time remembering
+;;; COMMANDS I always forget
 ;;; -----------------------------------------------------------------------
 ;;
 ;; --- MARK
@@ -87,7 +87,7 @@
 (setq line-move-visual nil)
 
 ;; do not wrap lines by words
-(global-visual-line-mode 0)
+(global-visual-line-mode nil)
 
 ;; scrolling
 (setq scroll-conservatively 101)
@@ -113,9 +113,6 @@
 (put 'downcase-region 'disabled nil)
 
 (add-hook 'before-save-hook (lambda () (delete-trailing-whitespace)))
-
-;; show line numbers
-;;(global-linum-mode 1)
 
 ;; display line/col number in modeline
 (setq line-number-mode t)
@@ -373,8 +370,7 @@
   ; speedup load time for remote files that are not accessible
   (setq recentf-keep '(file-remote-p file-readable-p))
   (setq recentf-max-saved-items 200)
-  (setq recentf-max-menu-items 60)
-  )
+  (setq recentf-max-menu-items 60))
 
 ;;; -----------------------------------------------------------------------
 ;;;; SAVE PLACE - remember last point in visited file
@@ -424,6 +420,7 @@
    ("s" flyspell-mode "flyspell")
    ("d" toggle-debug-on-error "debug")
    ("f" auto-fill-mode "fill")
+   ("n" global-linum-mode "line number")
    ("t" toggle-truncate-lines "truncate")
    ("w" whitespace-mode "whitespace")
    ("q" nil "cancel")))
@@ -709,9 +706,9 @@
 (setq ibuffer-expert t)
 
 ;;; -----------------------------------------------------------------------
-;;;; MAGIT
-;;; https://magit.vc
+;;;; GIT
 ;;; -----------------------------------------------------------------------
+;; https://magit.vc
 (use-package magit
   :ensure t
   :pin melpa
@@ -723,11 +720,11 @@
   ;;(setq magit-refresh-status-buffer nil) ; windows perf issues???
  )
 
-;;; -----------------------------------------------------------------------
-;;;; GIT-TIMEMACHINE
-;;; https://gitlab.com/pidu/git-timemachine
-;;; -----------------------------------------------------------------------
-;;(use-package git-timemachine)
+;; https://gitlab.com/pidu/git-timemachine
+(use-package git-timemachine
+  :bind (("s-g" . git-timemachine)))
+
+;; git-gutter? blamer?
 
 ;;; -----------------------------------------------------------------------
 ;;;; FLYCHECK
@@ -743,7 +740,6 @@
 ;;; https://emacs-lsp.github.io/lsp-mode/
 ;; lsp-workspace-restart : in case of problem, restart server
 ;;; -----------------------------------------------------------------------
-;; https://www.youtube.com/watch?v=E-NAM9U5JYE&list=PLEoMzSkcN8oNvsrtk_iZSb94krGRofFjN
 
 (defun cme-lsp-mode-setup ()
   ;; activate breadcrumb
@@ -765,13 +761,11 @@
               ;; rebind M-. and M-?
               ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
               ([remap xref-find-references] . lsp-ui-peek-find-references)
-              ("C-c u" . lsp-ui-imenu)))
-
-;; quicker symbol searching
-;;(use-package lsp-ivy)
-
-;; (use-package lsp-treemacs
-;;   :after lsp)
+              ("C-c u" . lsp-ui-imenu))
+  :custom
+  (setq lsp-ui-sideline-show-diagnostics t)
+  (setq lsp-ui-sideline-show-hover t)
+  (setq lsp-ui-sideline-show-code-actions t) )
 
 ;; DAP-MODE : debug adapter protocol
 ;; https://www.youtube.com/watch?v=0bilcQVSlbM&list=PLEoMzSkcN8oNvsrtk_iZSb94krGRofFjN&index=2
@@ -785,11 +779,11 @@
 ;;    dap-hydra
 ;;    dap-ui-repl
 (use-package dap-mode
+  :disabled
   :after (lsp-mode)
   :bind (:map lsp-mode-map
               ("<f5>" . dap-debug)
               ("M-<f5>" . dap-hydra)) )
-;;TODO sur le hook dap-stopped, essayer d'appeler: (lambda (arg) (call-interactively #'dp-hydra))
 
 ;;; -----------------------------------------------------------------------
 ;;;; PROJECTILE - project management
@@ -798,7 +792,7 @@
 ;;; project: s-p p    file: s-p f     dir: s-p d    help: s-p C-h
 ;;; grep: s-p s g
 ;;; switch to file with other extension: s-p a
-;;; regenerate tags: s-p R    search: s-p j
+;;; regenerate tags: s-p R    search: s-p j  see projectile-tags-command
 ;;; -----------------------------------------------------------------------
 (use-package projectile
   :defer 1
@@ -807,12 +801,10 @@
   :bind-keymap
   ("s-p" . projectile-command-map)
   :config
-  (projectile-mode 1)
   (setq projectile-indexing-method 'alien)
   (setq projectile-completion-system 'ivy)
-  (setq projectile-switch-project-action  'projectile-dired))
-
-;;see var projectile-tags-command
+  (setq projectile-switch-project-action  'projectile-dired)
+  (projectile-mode 1))
 
 ;;; -----------------------------------------------------------------------
 ;;;; COMPANY - complete anything
@@ -981,9 +973,6 @@
 (global-set-key (kbd "C-S-<f1>")      'find-name-dired)
 
 ;; f3 is kmacro-start-macro-or-insert-counter'
-
-(global-set-key (kbd "<f6>")          'flymake-display-err-menu-for-current-line)
-(global-set-key (kbd "C-<f6>")        'flymake-goto-next-error)
 
 (global-set-key (kbd "<f7>")          'recompile)
 (global-set-key (kbd "C-<f7>")        'compile)
