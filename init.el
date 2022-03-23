@@ -620,16 +620,17 @@
 
 ;;; -----------------------------------------------------------------------
 ;;;; UNDO TREE      tree: C-x u     undo: C-_   redo: M-_
-;;; http://www.dr-qubit.org/emacs.php#undo-tree
-;;; http://emacs-fu.blogspot.fr/2010/11/undo.html
+;;; https://gitlab.com/tsc25/undo-tree
 ;;; -----------------------------------------------------------------------
 (use-package undo-tree
   :defer 4
   :diminish undo-tree-mode
   :config
-  (global-undo-tree-mode t)
+  (let ((undotree-dir (expand-file-name "undotree" user-emacs-directory)))
+    (setq undo-tree-history-directory-alist `(("." . ,undotree-dir))))
   (setq undo-tree-visualizer-relative-timestamps t)
-  (setq undo-tree-visualizer-timestamps t))
+  (setq undo-tree-visualizer-timestamps t)
+  (global-undo-tree-mode t))
 
 ;;; -----------------------------------------------------------------------
 ;;;; EDIFF DIFF MODES
