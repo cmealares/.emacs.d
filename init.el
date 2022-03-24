@@ -814,7 +814,9 @@
   :ensure t
   :pin melpa-stable
   :bind-keymap
-  ("s-p" . projectile-command-map)
+  (("s-p" . projectile-command-map)
+   ("C-c p" . projectile-command-map))
+  :bind (("<f1>" . projectile-commander))
   :config
   (setq projectile-indexing-method 'alien)
   (setq projectile-completion-system 'ivy)
@@ -946,6 +948,9 @@
 ;;;
 ;;; M-x describe-bindings to view all bindings
 ;;; -----------------------------------------------------------------------
+
+;; C-x @ h adds the hyper flag to the next character, C-x @ s adds the super
+
 (when win32-p
   ;; bind menu key to hyper H-
   (setq w32-pass-apps-to-system nil)
@@ -960,6 +965,7 @@
 
   (w32-register-hot-key [s-])
   (w32-register-hot-key [h-]))
+
 
 (global-set-key (kbd "M-SPC")         'cycle-spacing)
 
