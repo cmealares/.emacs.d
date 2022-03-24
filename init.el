@@ -908,27 +908,10 @@
 ;; (add-hook 'c++-mode-hook 'yas-minor-mode)
 
 ;;; -----------------------------------------------------------------------
-;;;; WEBJUMP
-;;; -----------------------------------------------------------------------
-(use-package webjump
-  :defer 2
-  :bind ("C-x w" . webjump)
-  :commands webjump
-  :config
-  (setq webjump-sites
-        '(
-          ("C++ reference" . [simple-query "en.cppreference.com" "https://en.cppreference.com/mwiki/index.php?title=Special%3ASearch&search" ""])
-          ("Javascript reference" . [simple-query "http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference" "http://developer.mozilla.org/en-US/search?q= " ""])
-          ("Java API" . [simple-query "www.google.com" "http://www.google.ca/search?hl=en&as_sitesearch=http://java.sun.com/javase/6/docs/api/&q=" ""])
-          ("Google" . [simple-query "www.google.com" "www.google.com/search?q=" ""])
-          ("Emacs Wiki" . [simple-query "www.emacswiki.org" "www.emacswiki.org/cgi-bin/wiki/" ""]) ))
- )
-
-;;; -----------------------------------------------------------------------
 ;;;; LOAD MY OTHER CONFIG FILES
 ;;; -----------------------------------------------------------------------
 (load "setup-misc-functions.el")
-(load "setup-browse-url.el")
+(load "setup-browse.el")
 (load "setup-org.el")
 (load "setup-tagging.el")
 (load "setup-cc.el")
