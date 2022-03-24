@@ -583,6 +583,20 @@
 ;;  :bind ("M-s" . avy-goto-char))
 
 ;;; -----------------------------------------------------------------------
+;;; GREP
+;;; -----------------------------------------------------------------------
+(when win32-p
+  ;; since emacs23, the default did not work on my PC
+  ;;(setq grep-find-command "find . -type f -print0 | xargs -0 -e grep -nH -e ")
+
+  ;; See https://www.emacswiki.org/emacs/NTEmacsWithCygwin
+  ;; rgrep may generate find commands that use the null device.
+  ;; But Emacs uses "NUL" the windows null device instead of /dev/null
+  ;; this causes errors: "grep: NUL: No such file or directory"
+  ;; Solution: force it to use cygwin's null device
+  (setq null-device "/dev/null"))
+
+;;; -----------------------------------------------------------------------
 ;;;; WGREP
 ;; Edit a grep buffer and apply those changes to the file buffer
 ;; https://github.com/mhayashi1120/Emacs-wgrep
@@ -926,16 +940,14 @@
 ;;(load "setup-python.el")
 
 ;; (load "sap-misc.el")
-(load "sap-browse.el")
+;; (load "sap-browse.el")
 
 ;;; -----------------------------------------------------------------------
-;;;; SERVER MODE for emacsclient
+;;;; START SERVER
 ;;; -----------------------------------------------------------------------
-(add-hook 'after-init-hook
-          (lambda ()
-            (require 'server)
-            (unless (server-running-p)
-              (server-start))))
+(require 'server)
+(unless (server-running-p)
+  (server-start))
 
 ;;; -----------------------------------------------------------------------
 ;;;; TIE SOME FILE EXTENSIONS TO MODES
