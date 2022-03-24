@@ -87,7 +87,7 @@
 (setq line-move-visual nil)
 
 ;; do not wrap lines by words
-(global-visual-line-mode nil)
+(global-visual-line-mode -1)
 
 ;; scrolling
 (setq scroll-conservatively 101)
