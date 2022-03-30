@@ -103,6 +103,18 @@
 (add-hook 'c-mode-hook   'cme-c-mode-hook)
 (add-hook 'java-mode-hook 'cme-hilo-java-mode-hook)
 
+;; company backend for c/c++
+;; (use-package company-irony
+;;   :config
+;;   (add-to-list 'company-backends 'company-irony))
+
+;; (use-package irony
+;;   :config
+;;   (add-hook 'c++-mode-hook 'irony-mode)
+;;   (add-hook 'c-mode-hook 'irony-mode)
+;;   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+
 ;;; -----------------------------------------------------------------------
 ;;;; JAVA
 ;;; -----------------------------------------------------------------------

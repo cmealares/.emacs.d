@@ -1,44 +1,44 @@
-;; Todo
-;; https://tychoish.com/post/emacs-and-lsp-mode/
-;; lukewh https://www.youtube.com/watch?v=ELOmzi0RW_8
-
-;; https://www.chadstovern.com/javascript-in-emacs-revisited/
-;; rsjsx https://www.thedigitalcatonline.com/blog/2020/07/18/emacs-configuration-for-python-javascript-terraform-and-blogging/
-
-;; draco https://www.youtube.com/playlist?list=PLS0vLC7UzIP9w2uM3ZHSejT8KqlQtZE4Q
-
-
 ;;; -----------------------------------------------------------------------
-;;;; LANGUAGE SERVERS for ts and js
+;;; LANGUAGE SERVERS for ts and js
+;;; -----------------------------------------------------------------------
+
 ;; https://emacs-lsp.github.io/lsp-mode/page/lsp-typescript/
-;;; -----------------------------------------------------------------------
 ;; npm install -g typescript-language-server
 ;; npm install -g typescript
 
-;;; -----------------------------------------------------------------------
-;;;; WEB DEV
-;;; -----------------------------------------------------------------------
+;; https://emacs-lsp.github.io/lsp-mode/page/lsp-eslint/
+;; npm install -g eslint
+;; M-x lsp-install-server RET eslint
 
-;; https://web-mode.org/
+;;; -----------------------------------------------------------------------
+;;; WEB DEV
+;;; https://web-mode.org/
+;;; -----------------------------------------------------------------------
 (use-package web-mode
-  :custom
-  (web-mode-markup-indent-offset 2)
-  (web-mode-css-indent-offset 2)
-  (web-mode-code-indent-offset 2)
+  :config
+  (setq web-mode-markup-indent-offset 4)
+  (setq web-mode-css-indent-offset 4)
+  (setq web-mode-code-indent-offset 4)
   :mode (("\\.js\\'" . web-mode)
          ("\\.jsx\\'" . web-mode)
          ("\\.ts\\'" . web-mode)
          ("\\.tsx\\'" . web-mode)
          ("\\.html\\'" . web-mode))
-  :hook (web-mode . lsp-deferred))
+  :hook (web-mode . (lambda ()
+                      (when (or (string-equal "js" (file-name-extension buffer-file-name))
+                                (string-equal "jsx" (file-name-extension buffer-file-name))
+                                (string-equal "ts" (file-name-extension buffer-file-name))
+                                (string-equal "tsx" (file-name-extension buffer-file-name)))
+                        ;; does not seem to be implemented yet
+                        ;; instead manually call lsp-eslint-fix-all
+                        (setq lsp-eslint-auto-fix-on-save t)
+                        (lsp-deferred)) )))
 
-;; add project's node_modules/.bin/ directory to the buffer's exec-path
-;; (use-package add-node-modules-path
-;;   :defer t
-;;   :hook (((js2-mode typescript-mode web-mode) . add-node-modules-path)))
-
-;; https://github.com/smihica/emmet-mode
-;; C-j
+;;; -----------------------------------------------------------------------
+;;; EMMET
+;;; https://github.com/smihica/emmet-mode
+;;; C-j
+;;; -----------------------------------------------------------------------
 (use-package emmet-mode
   :disabled
   ;; :config
@@ -46,16 +46,9 @@
   ;;(add-hook 'css-mode-hook  'emmet-mode) ;; autostart on css mode
   )
 
-(use-package prettier-js
-  :disabled
-  :ensure t
-  :hook (((js2-mode typescript-mode web-mode) . prettier-js-mode)))
-
-
 ;;; -----------------------------------------------------------------------
-;;;; JAVASCRIPT / TYPESCRIPT
+;;; NOT USED
 ;;; -----------------------------------------------------------------------
-
 (use-package js2-mode
   :disabled
   :mode "\\.js$"

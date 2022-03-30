@@ -8,6 +8,11 @@
     :bind (("C-c l" . org-store-link)
            ("C-c a" . org-agenda))
 
+    :custom
+    ;; org-mode: Don't ruin S-arrow to switch windows
+    ;; use M-+ and M-- instead
+    (org-replace-disputed-keys t)
+
     :config
     (setq org-hide-leading-stars t)
     (setq org-odd-levels-only t)
