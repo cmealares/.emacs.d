@@ -103,7 +103,7 @@
 ;; flash instead of alarm bell
 (setq visible-bell t)
 
-(when (fboundp 'mouse-wheel-mode) (mouse-wheel-mode t))
+(when (fboundp 'mouse-wheel-mode) (mouse-wheel-mode 1))
 
 ;; default width for fill-paragraph
 (custom-set-variables '(fill-column 100))
@@ -127,16 +127,16 @@
 (setq transient-mark-mode t)
 
 ;; highlight current line
-(when window-system (global-hl-line-mode t))
+(when window-system (global-hl-line-mode 1))
 
 ;; Turn on font-lock in all modes that support it
-(global-font-lock-mode t)
+(global-font-lock-mode 1)
 
 ;; Maximum colors
 (setq font-lock-maximum-decoration t)
 
 ;; use ligatures when possible
-(global-prettify-symbols-mode t)
+(global-prettify-symbols-mode 1)
 
 (when window-system
   (setq frame-title-format '(buffer-file-name "%f" ("%b")))
@@ -400,10 +400,10 @@
 ;;; -----------------------------------------------------------------------
 (use-package midnight
   :defer 6
-  :config
-  (custom-set-variables '(midnight-mode t nil (midnight)))
+  :config (midnight-mode 1)
+  :custom
   ;; nb of days before a buffer becomes eligible for autokilling
-  (custom-set-variables '(clean-buffer-list-delay-general 3)) )
+  (clean-buffer-list-delay-general 3))
 
 ;;; -----------------------------------------------------------------------
 ;;; HYDRA
@@ -618,7 +618,7 @@
     (setq undo-tree-history-directory-alist `(("." . ,undotree-dir))))
   (setq undo-tree-visualizer-relative-timestamps t)
   (setq undo-tree-visualizer-timestamps t)
-  (global-undo-tree-mode t))
+  (global-undo-tree-mode 1))
 
 ;;; -----------------------------------------------------------------------
 ;;; EDIFF DIFF MODES
@@ -741,9 +741,6 @@
 ;;; -----------------------------------------------------------------------
 ;;; COMPLETION - HIPPIE & ABBREVIATIONS
 ;;; -----------------------------------------------------------------------
-;; since emacs24 a standard mechanism is completion-at-point:
-;; C-M-i. It uses tags and semantic
-
 ;; hippie-expand is built-in
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "M-RET") 'hippie-expand)
@@ -777,11 +774,15 @@
 
   (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 3)
-  (global-company-mode t)
+  (setq tab-always-indent 'complete)
+  (global-company-mode 1)
 
-  ;;:bind (:map lsp-mode-map
-  ;;            ("<tab>" . company-indent-or-complete-common))
-  )
+  :bind (:map company-mode-map
+              ;; since emacs24 the standard is completion-at-point C-M-i
+              ;; but I prefer company
+              ([remap completion-at-point] . 'company-complete)
+              ([remap indent-for-tab-command] . 'company-indent-or-complete-common)
+              ))
 
 ;;; -----------------------------------------------------------------------
 ;;; FLYCHECK
@@ -803,6 +804,9 @@
   :config
   ;; default (lsp-headerline-breadcrumb-mode 1)
   (lsp-enable-which-key-integration t))
+
+  ;;:bind (:map lsp-mode-map
+  ;;            ("<tab>" . company-indent-or-complete-common))
 
 ;;
 (use-package lsp-ui
