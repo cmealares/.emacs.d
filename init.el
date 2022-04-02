@@ -952,7 +952,6 @@
 ;;; -----------------------------------------------------------------------
 
 ;; C-x @ h adds the hyper flag to the next character, C-x @ s adds the super
-
 (when win32-p
   ;; bind menu key to hyper H-
   (setq w32-pass-apps-to-system nil)
@@ -968,8 +967,8 @@
   (w32-register-hot-key [s-])
   (w32-register-hot-key [h-]))
 
-
-(global-set-key (kbd "M-SPC")         'cycle-spacing)
+(global-set-key (kbd "<escape>")      'keyboard-escape-quit)
+(global-set-key (kbd "C-M-SPC")       'cycle-spacing)
 
 (when (fboundp 'imenu)
   (global-set-key [mouse-3]           'imenu))
