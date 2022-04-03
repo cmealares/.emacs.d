@@ -1,16 +1,11 @@
-;; init.el
-;; =======================================================================
-;; =======================================================================
-;; ===          Emacs settings Christophe Mealares                     ===
-;; =======================================================================
-;; =======================================================================
-;;
-;;
-;; emacs -Q -batch -f batch-byte-compile toto.el
+;; init.el     -*- lexical-binding: t -*-
+;; emacs config - christophe mealares
 
 ;;; -----------------------------------------------------------------------
 ;;; COMMANDS I always forget
 ;;; -----------------------------------------------------------------------
+;;
+;; emacs -Q -batch -f batch-byte-compile toto.el
 ;;
 ;; --- MARK
 ;; C-<SPC> C-<SPC>      set mark
@@ -145,14 +140,12 @@
 ;;; -----------------------------------------------------------------------
 ;;; LOAD PATH
 ;;; -----------------------------------------------------------------------
-(defconst cme-config-dir (expand-file-name "cme-config" user-emacs-directory)
-  "My configuration files")
 
-(defconst cme-site-lisp-dir (expand-file-name "site-lisp" user-emacs-directory)
-  "Additional modules are installed here")
+;; my configuration files
+(add-to-list 'load-path (locate-user-emacs-file "cme-config"))
 
-(add-to-list 'load-path cme-site-lisp-dir)
-(add-to-list 'load-path cme-config-dir)
+;; additional modules are installed here
+(add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
 
 ;;; -----------------------------------------------------------------------
 ;;; SYSTEM DEFAULTS
@@ -162,22 +155,22 @@
 
 ;; Load settings that are needed early
 ;; eg: http proxies, system paths
-(let ((initos (expand-file-name "init-system.el" user-emacs-directory)))
+(let ((initos (locate-user-emacs-file "init-system.el")))
   (when (file-exists-p initos)
     (load initos)))
 
 ;;; -----------------------------------------------------------------------
 ;;; CUSTOMIZE - save in a dedicated file
 ;;; -----------------------------------------------------------------------
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(setq custom-file (locate-user-emacs-file "custom.el"))
 (when (file-exists-p custom-file)
-  (load custom-file))
+  (load custom-file 'noerror 'nomessage))
 
 ;;; -----------------------------------------------------------------------
 ;;; BACKUP FILES in .emacs.d
 ;;; -----------------------------------------------------------------------
 (setq backup-directory-alist
-      `(("." . ,(expand-file-name "backups" user-emacs-directory))))
+      `(("." . ,(locate-user-emacs-file "backups"))))
 
 ;;; -----------------------------------------------------------------------
 ;;; MARK NAVIGATION. Pop:C-u C-SPC. Global pop:C-x C-SPC
@@ -241,7 +234,7 @@
 ;; "C-x =" and "C-u C-x =" provide complete unicode information of a character
 ;; Now built-in:
 ;;Get info file at: http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
-;;(let ((x (expand-file-name "UnicodeData.txt" user-emacs-directory)))
+;;(let ((x (locate-user-emacs-file "UnicodeData.txt")))
 ;;  (when (file-exists-p x) (setq describe-char-unicodedata-file x)))
 
 ;; Decode list of hexa numbers into a string
@@ -269,7 +262,7 @@
 ;; What font is used? describe-char and look at line in "display"
 ;; List all fonts (print (font-family-list))
 ;;; -----------------------------------------------------------------------
-(let ((themes-dir (expand-file-name "themes" user-emacs-directory)))
+(let ((themes-dir (locate-user-emacs-file "themes")))
   (setq custom-theme-directory themes-dir))
 
 (defconst cme-background-color "blanched almond")
@@ -379,10 +372,8 @@
 (use-package saveplace
   :defer 1
   :config
-  (setq save-place-file (expand-file-name "saveplace" user-emacs-directory))
-  (if (< emacs-major-version 25)
-      (setq-default save-place t)
-    (save-place-mode 1))  )
+  (setq save-place-file (locate-user-emacs-file "saveplace"))
+  (save-place-mode 1))
 
 ;;; -----------------------------------------------------------------------
 ;;; UNIQUIFY - how buffer names are made unique
@@ -545,9 +536,18 @@
          ;;("C-r" . counsel-minibuffer-history)
          ))
 
-;; Use smex to sort commands by frequency
+;;; -----------------------------------------------------------------------
+;;; SMEX
+;;; sort commands by frequency
+;;; -----------------------------------------------------------------------
 (use-package smex
   :config (smex-initialize))
+
+;;; -----------------------------------------------------------------------
+;; Save minibuffer history
+;;; -----------------------------------------------------------------------
+(setq history-length 20)
+(savehist-mode 1)
 
 ;;; -----------------------------------------------------------------------
 ;;; AVY - Jump to visible char
@@ -614,7 +614,7 @@
   :defer 4
   :diminish undo-tree-mode
   :config
-  (let ((undotree-dir (expand-file-name "undotree" user-emacs-directory)))
+  (let ((undotree-dir (locate-user-emacs-file "undotree")))
     (setq undo-tree-history-directory-alist `(("." . ,undotree-dir))))
   (setq undo-tree-visualizer-relative-timestamps t)
   (setq undo-tree-visualizer-timestamps t)
