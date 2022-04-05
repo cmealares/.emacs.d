@@ -560,8 +560,16 @@
 ;;; GREP
 ;;; -----------------------------------------------------------------------
 (when win32-p
-  ;; since emacs23, the default did not work on my PC
-  ;;(setq grep-find-command "find . -type f -print0 | xargs -0 -e grep -nH -e ")
+  ;; ms find might be in the path before cygwin's
+  (setq find-program "c:/cygwin64/bin/find.exe")
+  (setq grep-program "c:/cygwin64/bin/grep.exe")
+
+  ;; since emacs23, the default did not work
+  (setq grep-find-command (concat find-program
+                                  " . -type f -print0 | xargs -0 -e grep -nH -e "))
+
+  ;; use grep-find instead of rgrep which I can't get to work
+  (defalias 'rgrep  'grep-find)
 
   ;; See https://www.emacswiki.org/emacs/NTEmacsWithCygwin
   ;; rgrep may generate find commands that use the null device.
@@ -572,8 +580,8 @@
 
 ;;; -----------------------------------------------------------------------
 ;;; WGREP
-;; Edit a grep buffer and apply those changes to the file buffer
-;; https://github.com/mhayashi1120/Emacs-wgrep
+;;; Edit a grep buffer and apply those changes to the file buffer
+;;; https://github.com/mhayashi1120/Emacs-wgrep
 ;;; -----------------------------------------------------------------------
 (use-package wgrep
   :defer 2)
@@ -589,12 +597,12 @@
 
 ;;; -----------------------------------------------------------------------
 ;;; AG - The silversearcher
-;;  https://github.com/ggreer/the_silver_searcher
+;;; On windows, install with cygwin
+;;; https://github.com/ggreer/the_silver_searcher
 ;;; -----------------------------------------------------------------------
-;; (use-package ag
-;;   :disabled
-;;   :defer 2)
-;;
+(use-package ag
+  :defer 2)
+
 ;; (use-package wgrep-ag
 ;;   :after (wgrep ag))
 
