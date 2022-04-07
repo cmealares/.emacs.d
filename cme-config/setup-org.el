@@ -8,19 +8,21 @@
     :bind (("C-c l" . org-store-link)
            ("C-c a" . org-agenda))
 
+    :hook (org-mode . visual-line-mode)
+
     :custom
     ;; org-mode: Don't ruin S-arrow to switch windows
     ;; use M-+ and M-- instead
     (org-replace-disputed-keys t)
 
     :config
+    (when (fboundp 'org-bullets-mode)
+      (org-bullets-mode t))
+
     (setq org-hide-leading-stars t)
     (setq org-odd-levels-only t)
     (setq org-startup-folded t)
     (set-face-foreground 'org-hide cme-background-color)
-    (visual-line-mode t)
-    (when (fboundp 'org-bullets-mode)
-      (org-bullets-mode t))
 
     ;; todo
     (setq org-log-done 'time)

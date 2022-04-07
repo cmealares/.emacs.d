@@ -909,9 +909,7 @@
 (use-package yasnippet
   :defer 4
   :diminish yas-minor-mode
-  :hook (prog-mode . yas-minor-mode)
-  ;;   :config (yas-global-mode 1)) too slow
-  )
+  :hook (prog-mode . yas-minor-mode) )
 
 (use-package yasnippet-snippets
   :after (yasnippet) )
