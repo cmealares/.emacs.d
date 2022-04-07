@@ -437,18 +437,7 @@
   ("j" hydra-move-splitter-down "down")
   ("k" hydra-move-splitter-up "up")
   ("l" hydra-move-splitter-right "right")
-  ("s" cme-swap-windows "swap windows" :color blue))
-
-(defun cme-swap-windows ()
-  "Transpose the buffers shown in two windows."
-  (interactive)
-  (let* ((w1 (selected-window))
-         (w2 (next-window))
-         (b1 (window-buffer w1))
-         (b2 (window-buffer w2)))
-    (set-window-buffer w1 b2)
-    (set-window-buffer w2 b1)
-    (select-window w2)))
+  ("s" window-swap-states "swap windows" :color blue))
 
 (defun hydra-move-splitter-left (arg)
   "Move window splitter left."
