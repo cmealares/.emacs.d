@@ -180,10 +180,10 @@
 
 ;;; -----------------------------------------------------------------------
 ;;; PACKAGE MANAGEMENT
-;; https://github.com/jwiegley/use-package
-;;     :init code to run before a package is loaded. Keep minimal!
-;;     :config code to run after a package is loaded
-;;     :custom customized variables
+;;; https://github.com/jwiegley/use-package
+;;;     :init code to run before a package is loaded. Keep minimal!
+;;;     :config code to run after a package is loaded
+;;;     :custom customized variables
 ;;; -----------------------------------------------------------------------
 (require 'package)
 
@@ -210,8 +210,8 @@
 
 ;;; -----------------------------------------------------------------------
 ;;; ESUP : emacs startup profiler
-;; https://blog.d46.us/advanced-emacs-startup/
-;; to run: esup
+;;; https://blog.d46.us/advanced-emacs-startup/
+;;; to run: esup
 ;;; -----------------------------------------------------------------------
 (use-package esup
   :disabled
@@ -220,13 +220,13 @@
 
 ;;; -----------------------------------------------------------------------
 ;;; ENCODING and UNICODE - use UTF-8
-;; Inserting characters
-;;     insert-char C-x 8 <RET>
-;;     counsel-unicode-char
-;;
-;; Reload file with a named encoding: revert-buffer-with-coding-system
-;; See the encoding of the current buffer: variable buffer-file-coding-system
-;; Set coding system to save the file set-buffer-file-coding-system  C-x C-m f
+;;; Inserting characters
+;;;     insert-char C-x 8 <RET>
+;;;     counsel-unicode-char
+;;;
+;;; Reload file with a named encoding: revert-buffer-with-coding-system
+;;; See the encoding of the current buffer: variable buffer-file-coding-system
+;;; Set coding system to save the file set-buffer-file-coding-system  C-x C-m f
 ;;; -----------------------------------------------------------------------
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
@@ -257,10 +257,10 @@
 
 ;;; -----------------------------------------------------------------------
 ;;; THEME
-;; https://batsov.com/articles/2012/02/19/color-theming-in-emacs-reloaded/
-;; http://emacsthemes.com/
-;; What font is used? describe-char and look at line in "display"
-;; List all fonts (print (font-family-list))
+;;; https://batsov.com/articles/2012/02/19/color-theming-in-emacs-reloaded/
+;;; http://emacsthemes.com/
+;;; What font is used? describe-char and look at line in "display"
+;;; List all fonts (print (font-family-list))
 ;;; -----------------------------------------------------------------------
 (let ((themes-dir (locate-user-emacs-file "themes")))
   (setq custom-theme-directory themes-dir))
@@ -298,7 +298,7 @@
 
 ;;; -----------------------------------------------------------------------
 ;;; SPACELINE
-;; https://github.com/TheBB/spaceline
+;;; https://github.com/TheBB/spaceline
 ;;; -----------------------------------------------------------------------
 (use-package spaceline
   :defer 1
@@ -311,7 +311,7 @@
 
 ;;; -----------------------------------------------------------------------
 ;;; BEACON
-;; light to follow the cursor
+;;; light to follow the cursor
 ;;; -----------------------------------------------------------------------
 (use-package beacon
   :defer 6
@@ -376,6 +376,12 @@
   (save-place-mode 1))
 
 ;;; -----------------------------------------------------------------------
+;;; Save minibuffer history
+;;; -----------------------------------------------------------------------
+(setq history-length 20)
+(savehist-mode 1)
+
+;;; -----------------------------------------------------------------------
 ;;; UNIQUIFY - how buffer names are made unique
 ;;; -----------------------------------------------------------------------
 (use-package emacs
@@ -398,7 +404,7 @@
 
 ;;; -----------------------------------------------------------------------
 ;;; HYDRA
-;; https://github.com/abo-abo/hydra
+;;; https://github.com/abo-abo/hydra
 ;;; -----------------------------------------------------------------------
 (use-package hydra
   :defer 4)
@@ -473,11 +479,22 @@
 
 ;;; -----------------------------------------------------------------------
 ;;; DIRED
-;;  C-x C-q: edit dired buffer (enter wdired)
+;;;  C-x C-q: edit dired buffer (enter wdired)
 ;;; -----------------------------------------------------------------------
 (use-package emacs
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump)))
+
+;;(use-package all-the-icons-dired
+;;  :hook (dired-mode . all-the-icons-dired-mode))
+
+;; visits the selected directory in the current buffer
+(use-package dired-single
+
+  :bind (:map dired-mode-map
+              ([remap dired-find-file] . 'dired-single-buffer)
+              ([remap dired-up-directory] . 'dired-single-up-directory)
+              ([remap dired-mouse-find-file-other-window] . 'dired-single-buffer-mouse) ))
 
 ;;; -----------------------------------------------------------------------
 ;;; HUNGRY DELETE
@@ -489,12 +506,12 @@
 
 ;;; -----------------------------------------------------------------------
 ;;; SWIPER: IVY:completion & COUNSEL:command completion & SWIPER:isearch
-;; https://github.com/abo-abo/swiper
-;; M-j extend the minibuffer input with the next word
-;; M-r toggle regexp
-;; C-M-j select current input
-;; C-j ou / complete directory
-;; C-c C-o ivy-occur  save the completion session to a buffer
+;;; https://github.com/abo-abo/swiper
+;;; M-j extend the minibuffer input with the next word
+;;; M-r toggle regexp
+;;; C-M-j select current input
+;;; C-j ou / complete directory
+;;; C-c C-o ivy-occur  save the completion session to a buffer
 ;;; -----------------------------------------------------------------------
 (use-package counsel
   :defer 1
@@ -525,6 +542,10 @@
          ;;("C-r" . counsel-minibuffer-history)
          ))
 
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+
 ;;; -----------------------------------------------------------------------
 ;;; SMEX
 ;;; sort commands by frequency
@@ -533,14 +554,8 @@
   :config (smex-initialize))
 
 ;;; -----------------------------------------------------------------------
-;; Save minibuffer history
-;;; -----------------------------------------------------------------------
-(setq history-length 20)
-(savehist-mode 1)
-
-;;; -----------------------------------------------------------------------
 ;;; AVY - Jump to visible char
-;; https://github.com/abo-abo/avy
+;;; https://github.com/abo-abo/avy
 ;;; -----------------------------------------------------------------------
 ;;(use-package avy
 ;;  :bind ("M-s" . avy-goto-char))
@@ -596,7 +611,7 @@
 ;;   :after (wgrep ag))
 
 ;;; -----------------------------------------------------------------------
-;;; WHICH-KEY shows available keybindings
+;;; WHICH-KEY shows the keybindings of entered commads
 ;;; -----------------------------------------------------------------------
 (use-package which-key
   :defer 2
@@ -665,6 +680,12 @@
   ;; Remove C-m (^M) characters that appear in output
   (add-hook 'comint-output-filter-functions
             'comint-strip-ctrl-m) )
+
+;;; -----------------------------------------------------------------------
+;;; RAINBOW DELIMITERS
+;;; -----------------------------------------------------------------------
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 ;;; -----------------------------------------------------------------------
 ;;; TRAMP

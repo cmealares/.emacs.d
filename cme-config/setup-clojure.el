@@ -11,10 +11,7 @@
          ("\\.boot$" . clojure-mode)
          ("\\.cljs.*$" . clojure-mode))
 
-  :init
-  (add-hook 'clojure-mode-hook 'enable-paredit-mode)
-  (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
-)
+  :hook (clojure-mode paredit-mode))
 
 ;; extra syntax highlighting for clojure
 (use-package clojure-mode-extra-font-locking
