@@ -486,10 +486,18 @@
 ;;; -----------------------------------------------------------------------
 ;;; DIRED
 ;;;  C-x C-q: edit dired buffer (enter wdired)
+;;;  j: jump to a file
+;;;  ^: open parent folder
 ;;; -----------------------------------------------------------------------
-(use-package emacs
+(use-package dired
+  :ensure nil ; do not install because it does not exist
   :commands (dired dired-jump)
-  :bind (("C-x C-j" . dired-jump)))
+  :bind (("C-x C-j" . dired-jump))
+  :init
+  (when win32-p
+    ;; options for the ls emulation on windows
+    (setq ls-lisp-dirs-first t)
+    (setq ls-lisp-format-time-list '("%Y-%m-%d %H:%M" "%Y-%m-%d %H:%M"))))
 
 ;;(use-package all-the-icons-dired
 ;;  :hook (dired-mode . all-the-icons-dired-mode))
