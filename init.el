@@ -310,6 +310,12 @@
   (spaceline-emacs-theme))
 
 ;;; -----------------------------------------------------------------------
+;;; RAINBOW DELIMITERS
+;;; -----------------------------------------------------------------------
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+;;; -----------------------------------------------------------------------
 ;;; BEACON
 ;;; light to follow the cursor
 ;;; -----------------------------------------------------------------------
@@ -490,8 +496,7 @@
 
 ;; visits the selected directory in the current buffer
 (use-package dired-single
-
-  :bind (:map dired-mode-map
+:bind (:map dired-mode-map
               ([remap dired-find-file] . 'dired-single-buffer)
               ([remap dired-up-directory] . 'dired-single-up-directory)
               ([remap dired-mouse-find-file-other-window] . 'dired-single-buffer-mouse) ))
@@ -516,19 +521,10 @@
 (use-package counsel
   :defer 1
   :diminish
+  :bind (:map minibuffer-local-map
+              ("C-r" . 'counsel-minibuffer-history))
   :config
   (counsel-mode 1))
-
-(use-package swiper
-  :diminish ivy-mode
-  :config
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  ;;(setq enable-recursive-minibuffers t)
-  :bind (("C-s" . swiper)
-         ("C-c C-s" . isearch-forward)
-         ("C-c C-r" . ivy-resume)
-         ("<f3>" . ivy-resume)
          ;;("<f1> f" . counsel-describe-function)
          ;;("<f1> v" . counsel-describe-variable)
          ;;("<f1> l" . counsel-find-library)
@@ -538,9 +534,19 @@
          ;;("C-c j" . counsel-git-grep)
          ;;("C-c k" . counsel-ag)
          ;;("C-x l" . counsel-locate)
-         ;; :map minibuffer-local-map
-         ;;("C-r" . counsel-minibuffer-history)
-         ))
+
+(use-package swiper
+  :bind (("C-s" . swiper)
+         ("C-c C-s" . isearch-forward)
+         ("C-c C-r" . ivy-resume)
+         ("<f3>" . ivy-resume) ))
+
+(use-package ivy
+  :diminish ivy-mode
+  :config
+  (setq ivy-use-virtual-buffers t)
+  ;;(setq enable-recursive-minibuffers t)
+  (ivy-mode 1))
 
 (use-package ivy-rich
   :init
@@ -682,12 +688,6 @@
             'comint-strip-ctrl-m) )
 
 ;;; -----------------------------------------------------------------------
-;;; RAINBOW DELIMITERS
-;;; -----------------------------------------------------------------------
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-;;; -----------------------------------------------------------------------
 ;;; TRAMP
 ;;; -----------------------------------------------------------------------
 (use-package tramp
@@ -700,8 +700,7 @@
     ;; PuTTY's ssh tunneling - of course they must be on the PATH
     ;; configure and save a session in putty
     ;; and then C-x C-f //plinkx:wasabi:toto.cpp
-    (setq tramp-default-method "plinkx"))
-  )
+    (setq tramp-default-method "plinkx")) )
 
 ;;; -----------------------------------------------------------------------
 ;;; ibuffer MODE
