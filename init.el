@@ -121,9 +121,6 @@
 ;; region highlighting
 (setq transient-mark-mode t)
 
-;; highlight current line
-(when window-system (global-hl-line-mode 1))
-
 ;; Turn on font-lock in all modes that support it
 (global-font-lock-mode 1)
 
@@ -259,8 +256,10 @@
 ;;; THEME
 ;;; https://batsov.com/articles/2012/02/19/color-theming-in-emacs-reloaded/
 ;;; http://emacsthemes.com/
+;;; What fact is used? describe-face
 ;;; What font is used? describe-char and look at line in "display"
 ;;; List all fonts (print (font-family-list))
+;;; List all faces: list-faces-display
 ;;; -----------------------------------------------------------------------
 (let ((themes-dir (locate-user-emacs-file "themes")))
   (setq custom-theme-directory themes-dir))
@@ -316,6 +315,11 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 ;;; -----------------------------------------------------------------------
+;;; RAINBOW Colorize color names in buffers
+;;; -----------------------------------------------------------------------
+(use-package rainbow-mode)
+
+;;; -----------------------------------------------------------------------
 ;;; BEACON
 ;;; light to follow the cursor
 ;;; -----------------------------------------------------------------------
@@ -326,6 +330,9 @@
   (setq beacon-size 60)
   (setq beacon-color "#FF6600")
   (beacon-mode 1))
+
+;; highlight current line
+(when window-system (global-hl-line-mode 1))
 
 ;;; -----------------------------------------------------------------------
 ;;; ISPELL
