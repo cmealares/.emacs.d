@@ -273,10 +273,19 @@
 
 ;; Frame properties. To display all: (prin1-to-string (frame-parameters))
 (when window-system
-  (add-to-list 'default-frame-alist '(cursor-color . "coral"))
-  (add-to-list 'default-frame-alist `(background-color . ,cme-background-color))
+  ;;(add-to-list 'default-frame-alist '(cursor-color . "coral"))
+  ;;(add-to-list 'default-frame-alist `(background-color . ,cme-background-color))
   (add-to-list 'default-frame-alist '(height . 60))
   (add-to-list 'default-frame-alist '(width . 85))
+
+  ;; some free fonts:
+  ;; source code pro
+  ;; code new roman (monospaced)
+  ;; roboto mono  (monospaced)
+  ;; hack
+  ;; jetbrains mono
+  ;; ubuntu mono
+  ;; mononoki
 
   (when linux-p
     (set-frame-font "DejaVu Sans Mono-11" nil t))
@@ -297,8 +306,8 @@
 (unless (package-installed-p 'spacemacs-theme)
   (package-install 'spacemacs-theme))
 
-;; (load-theme 'spacemacs-dark)
-;; and use disable-theme to turn off
+(load-theme 'montmirail t)
+;; use disable-theme to turn off
 
 
 ;; -----------------------------------------------------------------------
@@ -333,7 +342,7 @@
   :defer 6
   :diminish
   :config
-  (setq beacon-size 60)
+  (setq beacon-size 80)
   (setq beacon-color "#FF6600")
   (beacon-mode 1))
 
