@@ -446,7 +446,8 @@
 ;; WINNER-MODE - navigate in window config with C-c right/left
 ;; -----------------------------------------------------------------------
 (use-package winner
-  :defer 4)
+  :defer 4
+  :config (winner-mode 1))
 
 ;; -----------------------------------------------------------------------
 ;; WINDMOVE - navigate buffers with S-arrow
