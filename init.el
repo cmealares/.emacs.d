@@ -261,7 +261,7 @@
 ;; THEME
 ;; https://batsov.com/articles/2012/02/19/color-theming-in-emacs-reloaded/
 ;; http://emacsthemes.com/
-;; What fact is used? describe-face
+;; What facet is used? describe-face
 ;; What font is used? describe-char and look at line in "display"
 ;; List all fonts (print (font-family-list))
 ;; List all loaded faces: list-faces-display
@@ -273,8 +273,6 @@
 
 ;; Frame properties. To display all: (prin1-to-string (frame-parameters))
 (when window-system
-  ;;(add-to-list 'default-frame-alist '(cursor-color . "coral"))
-  ;;(add-to-list 'default-frame-alist `(background-color . ,cme-background-color))
   (add-to-list 'default-frame-alist '(height . 60))
   (add-to-list 'default-frame-alist '(width . 85))
 
@@ -670,7 +668,7 @@
   (global-undo-tree-mode 1))
 
 ;; -----------------------------------------------------------------------
-;; EDIFF DIFF MODES
+;; EDIFF DIFF MODE
 ;; -----------------------------------------------------------------------
 (use-package diff-mode
   :defer 2
@@ -679,10 +677,7 @@
   ;; do not spawn a new frame for the ediff control window
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   ;; use a vertical layout
-  (setq ediff-split-window-function 'split-window-horizontally)
-
-  (set-face-foreground 'diff-added "green4")
-  (set-face-foreground 'diff-removed "red3"))
+  (setq ediff-split-window-function 'split-window-horizontally))
 
 ;; -----------------------------------------------------------------------
 ;; SHELL MODE
