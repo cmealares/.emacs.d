@@ -313,7 +313,6 @@
 ;; https://github.com/TheBB/spaceline
 ;; -----------------------------------------------------------------------
 (use-package spaceline
-  :defer 1
   :config
   (require 'spaceline-config)
   (setq powerline-default-separator 'arrow) ;'wave)
@@ -330,7 +329,8 @@
 ;; -----------------------------------------------------------------------
 ;; RAINBOW Colorize color names in buffers
 ;; -----------------------------------------------------------------------
-(use-package rainbow-mode)
+(use-package rainbow-mode
+  :commands rainbow-mode)
 
 ;; -----------------------------------------------------------------------
 ;; BEACON
@@ -525,7 +525,8 @@
 
 ;; visits the selected directory in the current buffer
 (use-package dired-single
-:bind (:map dired-mode-map
+  :commands (dired dired-jump)
+  :bind (:map dired-mode-map
               ([remap dired-find-file] . 'dired-single-buffer)
               ([remap dired-up-directory] . 'dired-single-up-directory)
               ([remap dired-mouse-find-file-other-window] . 'dired-single-buffer-mouse) ))
@@ -548,21 +549,20 @@
 ;; C-c C-o ivy-occur  save the completion session to a buffer
 ;; -----------------------------------------------------------------------
 (use-package counsel
-  :defer 1
   :diminish
   :bind (:map minibuffer-local-map
               ("C-r" . 'counsel-minibuffer-history))
   :config
   (counsel-mode 1))
-         ;;("<f1> f" . counsel-describe-function)
-         ;;("<f1> v" . counsel-describe-variable)
-         ;;("<f1> l" . counsel-find-library)
-         ;;("<f2> i" . counsel-info-lookup-symbol)
-         ;;("<f2> u" . counsel-unicode-char)
-         ;;("C-c g" . counsel-git)
-         ;;("C-c j" . counsel-git-grep)
-         ;;("C-c k" . counsel-ag)
-         ;;("C-x l" . counsel-locate)
+  ;;("<f1> f" . counsel-describe-function)
+  ;;("<f1> v" . counsel-describe-variable)
+  ;;("<f1> l" . counsel-find-library)
+  ;;("<f2> i" . counsel-info-lookup-symbol)
+  ;;("<f2> u" . counsel-unicode-char)
+  ;;("C-c g" . counsel-git)
+  ;;("C-c j" . counsel-git-grep)
+  ;;("C-c k" . counsel-ag)
+  ;;("C-x l" . counsel-locate)
 
 (use-package swiper
   :bind (("C-s" . swiper)
@@ -578,6 +578,7 @@
   (ivy-mode 1))
 
 (use-package ivy-rich
+  :after ivy
   :init
   (ivy-rich-mode 1))
 
@@ -658,8 +659,8 @@
 ;; https://gitlab.com/tsc25/undo-tree
 ;; -----------------------------------------------------------------------
 (use-package undo-tree
-  :defer 4
   :diminish undo-tree-mode
+  :commands (undo-tree-visualize)
   :config
   (let ((undotree-dir (locate-user-emacs-file "undotree")))
     (setq undo-tree-history-directory-alist `(("." . ,undotree-dir))))
@@ -742,7 +743,6 @@
 ;; -----------------------------------------------------------------------
 ;; https://magit.vc
 (use-package magit
-  :ensure t
   :pin melpa
   :bind (("C-x g" . magit-status)
          ;;("C-x M-g" . magit-dispatch); C-c M-g: magit-file-dispatch
@@ -768,8 +768,6 @@
 ;; regenerate tags: s-p R    search: s-p j  see projectile-tags-command
 ;; -----------------------------------------------------------------------
 (use-package projectile
-  :defer 1
-  :ensure t
   :pin melpa-stable
   :bind-keymap
   (("s-p" . projectile-command-map)
@@ -857,7 +855,7 @@
 
 ;;
 (use-package lsp-ui
-  :after (lsp-mode)
+  :after lsp
   :bind (:map lsp-ui-mode-map
               ;; rebind M-. and M-? as suggested in the doc
               ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
@@ -872,10 +870,10 @@
   (setq lsp-ui-sideline-show-code-actions t) )
 
 
-(use-package treemacs)
+(use-package treemacs
+  :after lsp)
 
 (use-package lsp-treemacs
-  :after lsp
   :commands
   (lsp-treemacs-errors-list ;; this is broken on windows
    lsp-treemacs-symbols))
@@ -896,7 +894,7 @@
 ;;    dap-ui-repl
 (use-package dap-mode
   :disabled
-  :after (lsp-mode)
+  :commands (dap-debug dap-hydra)
   :bind (:map lsp-mode-map
               ("<f5>" . dap-debug)
               ("M-<f5>" . dap-hydra)) )
@@ -946,9 +944,8 @@
 ;; http://joaotavora.github.io/yasnippet/
 ;; -----------------------------------------------------------------------
 (use-package yasnippet
-  :defer 4
   :diminish yas-minor-mode
-  :hook (prog-mode . yas-minor-mode) )
+  :hook (prog . yas-minor-mode) )
 
 (use-package yasnippet-snippets
   :after (yasnippet) )

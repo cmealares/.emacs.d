@@ -16,9 +16,6 @@
     (org-replace-disputed-keys t)
 
     :config
-    (when (fboundp 'org-bullets-mode)
-      (org-bullets-mode t))
-
     (setq org-hide-leading-stars t)
     (setq org-odd-levels-only t)
     (setq org-startup-folded t)
@@ -61,8 +58,12 @@
 ;;             ("h" "Tasks that were closed this sprint"
 ;;              tags "CATEGORY=\"task\"+CLOSED>=\"[2011-09-01 Thu]\"+CLOSED<=\"[2011-09-30 Fri]\"") ))
 ;;
-  )
+    )
 
+(use-package org-bullets
+  :disabled
+  :after org ;; useless simce it s loaded with a hook
+  :hook (org-mode . org-bullets-mode))
 
 
 ;; REMEMBER
