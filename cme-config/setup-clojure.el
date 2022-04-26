@@ -1,12 +1,9 @@
 ;;; -----------------------------------------------------------------------
-;;;; CLOJURE
-;; https://github.com/clojure-emacs/clojure-mode
+;;; CLOJURE
+;;; https://github.com/clojure-emacs/clojure-mode
 ;;; -----------------------------------------------------------------------
 
-
 (use-package clojure-mode
-  :ensure t
-
   :mode (("\\.edn$" . clojure-mode)
          ("\\.boot$" . clojure-mode)
          ("\\.cljs.*$" . clojure-mode))
@@ -15,27 +12,21 @@
 
 ;; extra syntax highlighting for clojure
 (use-package clojure-mode-extra-font-locking
-  :requires clojure-mode)
+  :after clojure-mode)
 
 
 ;;; -----------------------------------------------------------------------
-;;;; CIDER :
-;; Integration with a Clojure REPL
-;; https://docs.cider.mx/
+;;; CIDER :
+;,;; Integration with a Clojure REPL
+;;; https://docs.cider.mx/
 ;;; -----------------------------------------------------------------------
-
 (use-package cider
-  :ensure t
   :pin melpa-stable
 
+  :hook ((cider-repl-mode . paredit-mode)
+         (cider-repl-mode . rainbow-delimiters-mode))
 
-  :init
-  (add-hook 'cider-repl-mode-hook 'paredit-mode)
-  (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
-
+  ;;:init
   ;; font-lock for all namespaces
   ;(setq cider-font-lock-dynamically '(macro core function var))
-
-
-
   )

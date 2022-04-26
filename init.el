@@ -4,18 +4,18 @@
 
 ;;; Commentary:
 
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 ;; COMMANDS I always forget
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 ;;
 ;; emacs -Q -batch -f batch-byte-compile toto.el
 ;;
-;; --- MARK
+;;; -- MARK
 ;; C-<SPC> C-<SPC>      set mark
 ;; C-u C-<SPC>          pop mark: in same buffer
 ;; C-x C-<SPC>          pop global mark: can be in other buffer
 ;;
-;; --- Repeat command
+;;; -- Repeat command
 ;; C-x z z z z          repeat
 ;; C-x Esc Esc          repeat-complex-command.  M-p M-n move in history
 ;;
@@ -29,18 +29,18 @@
 ;; Esc C-\\             indent-region
 ;; M-u / M-l / M-c      upcase-word / downcase-word / capitalize-word
 ;;
-;; --- Deleting
+;;; -- Deleting
 ;; C-0 C-k              delete from point to beginning of line
 ;; S-C-<backspace>      delete entire line
 ;; M-z                  zap-to-char
 ;;
-;; --- Paragraph
+;;; -- Paragraph
 ;; M-m                  back-to-indentation
 ;; M-q                  fill-paragraph
 ;; C-u 35 C-x f         set fill-column to 35
 ;; M-t                  transpose-words
 ;;
-;; --- SEARCH and MATCH
+;;; -- SEARCH and MATCH
 ;; C-s M-y              search last killed text
 ;; keep-lines           delete non matching lines
 ;; flush-lines          delete matching lines
@@ -51,10 +51,10 @@
 ;;
 ;; C-u C-x q            Enter recursive edit in macro.  Exit recursive edit with C-M-c
 ;;
-;; --- REGEXP
+;;; -- REGEXP
 ;; re-builder           Helps to build a regexp
 ;;
-;; --- REGEXP tips from Steve Yegge
+;;; -- REGEXP tips from Steve Yegge
 ;;  capitalize words"     replace-regexp   \\(\\w+\\)\\(\\w\\)  ->   \\1\\,(capitalize \\2)
 ;;  number lines"         replace-regexp   ^\\(.+\\)        ->   \\,(1+ \\#) \\1):
 ;;  renumber a list"      replace-regexp   ^\\([0-9]+\\)    ->   \\,(1+ (string-to-int \\1))
@@ -63,15 +63,15 @@
 
 ;;; Code:
 
-;; -----------------------------------------------------------------------
-;; Make startup faster by reducing the frequency of garbage collection
-;; The default is 800 kilobytes
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; Make startup faster by reducing the frequency of garbage collection
+;;; The default is 800 kilobytes
+;;; ----------------------------------------------------------------------
 (setq gc-cons-threshold (* 50 1000 1000))
 
-;; -----------------------------------------------------------------------
-;; BETTER DEFAULTS
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; BETTER DEFAULTS
+;;; ----------------------------------------------------------------------
 ;; no splash screen
 (setq inhibit-startup-message t)
 
@@ -140,18 +140,18 @@
   (set-fringe-mode 10)
   (blink-cursor-mode 0))
 
-;; -----------------------------------------------------------------------
-;; LOAD PATH
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; LOAD PATH
+;;; ----------------------------------------------------------------------
 ;; my configuration files
 (add-to-list 'load-path (locate-user-emacs-file "cme-config"))
 
 ;; additional modules are installed here
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
 
-;; -----------------------------------------------------------------------
-;; SYSTEM DEFAULTS
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; SYSTEM DEFAULTS
+;;; ----------------------------------------------------------------------
 (defconst win32-p (eq system-type 'windows-nt) "Are we running on Windoze?")
 (defconst linux-p (or (eq system-type 'gnu/linux) (eq system-type 'linux)) "Are we running on GNU/Linux?")
 
@@ -161,32 +161,32 @@
   (when (file-exists-p initos)
     (load initos)))
 
-;; -----------------------------------------------------------------------
-;; CUSTOMIZE - save in a dedicated file
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; CUSTOMIZE - save in a dedicated file
+;;; ----------------------------------------------------------------------
 (setq custom-file (locate-user-emacs-file "custom.el"))
 (when (file-exists-p custom-file)
   (load custom-file 'noerror 'nomessage))
 
-;; -----------------------------------------------------------------------
-;; BACKUP FILES in .emacs.d
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; BACKUP FILES in .emacs.d
+;;; ----------------------------------------------------------------------
 (setq backup-directory-alist
       `(("." . ,(locate-user-emacs-file "backups"))))
 
-;; -----------------------------------------------------------------------
-;; MARK NAVIGATION. Pop:C-u C-SPC. Global pop:C-x C-SPC
-;; repeating C-SPC with no prefix pops the next mark
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; MARK NAVIGATION. Pop:C-u C-SPC. Global pop:C-x C-SPC
+;;; repeating C-SPC with no prefix pops the next mark
+;;; ----------------------------------------------------------------------
 (setq set-mark-command-repeat-pop t)
 
-;; -----------------------------------------------------------------------
-;; PACKAGE MANAGEMENT
+;;; ----------------------------------------------------------------------
+;;; PACKAGE MANAGEMENT
 ;; https://github.com/jwiegley/use-package
 ;;     :init code to run before a package is loaded. Keep minimal!
 ;;     :config code to run after a package is loaded
 ;;     :custom customized variables
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (require 'package)
 
 ;; ??? temp avoid failures for missing signature
@@ -210,18 +210,18 @@
 
 (use-package diminish)
 
-;; -----------------------------------------------------------------------
-;; ESUP : emacs startup profiler
+;;; ----------------------------------------------------------------------
+;;; ESUP : emacs startup profiler
 ;; https://blog.d46.us/advanced-emacs-startup/
 ;; to run: esup
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package esup
   :disabled
   :config
   (setq esup-depth 0)) ; workaround bug on compiled files
 
-;; -----------------------------------------------------------------------
-;; ENCODING and UNICODE - use UTF-8
+;;; ----------------------------------------------------------------------
+;;; ENCODING and UNICODE - use UTF-8
 ;; Inserting characters
 ;;     insert-char C-x 8 <RET>
 ;;     counsel-unicode-char
@@ -229,7 +229,7 @@
 ;; Reload file with a named encoding: revert-buffer-with-coding-system
 ;; See the encoding of the current buffer: variable buffer-file-coding-system
 ;; Set coding system to save the file set-buffer-file-coding-system  C-x C-m f
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
 
@@ -257,15 +257,15 @@
     (princ
      (mapcar (lambda (x) (format "%X" x))  decimal))))
 
-;; -----------------------------------------------------------------------
-;; THEME
+;;; ----------------------------------------------------------------------
+;;; THEME
 ;; https://batsov.com/articles/2012/02/19/color-theming-in-emacs-reloaded/
 ;; http://emacsthemes.com/
 ;; What facet is used? describe-face
 ;; What font is used? describe-char and look at line in "display"
 ;; List all fonts (print (font-family-list))
 ;; List all loaded faces: list-faces-display
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (let ((themes-dir (locate-user-emacs-file "themes")))
   (setq custom-theme-directory themes-dir))
 
@@ -308,11 +308,12 @@
 ;; use disable-theme to turn off
 
 
-;; -----------------------------------------------------------------------
-;; SPACELINE
+;;; ----------------------------------------------------------------------
+;;; SPACELINE
 ;; https://github.com/TheBB/spaceline
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package spaceline
+  :defer 1
   :config
   (require 'spaceline-config)
   (setq powerline-default-separator 'arrow) ;'wave)
@@ -320,22 +321,22 @@
   ;;(spaceline-toggle-buffer-encoding-on)
   (spaceline-emacs-theme))
 
-;; -----------------------------------------------------------------------
-;; RAINBOW DELIMITERS
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; RAINBOW DELIMITERS
+;;; ----------------------------------------------------------------------
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 ;; RAINBOW Colorize color names in buffers
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package rainbow-mode
   :commands rainbow-mode)
 
-;; -----------------------------------------------------------------------
-;; BEACON
+;;; ----------------------------------------------------------------------
+;;; BEACON
 ;; light to follow the cursor
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package beacon
   :defer 6
   :diminish
@@ -347,15 +348,15 @@
 ;; highlight current line
 (when window-system (global-hl-line-mode 1))
 
-;; -----------------------------------------------------------------------
-;; ISPELL
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; ISPELL
+;;; ----------------------------------------------------------------------
 (setq ispell-program-name "aspell")
 (setq ispell-dictionary "francais")
 
-;; -----------------------------------------------------------------------
-;; Improve performance problems of big files
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; Improve performance problems of big files
+;;; ----------------------------------------------------------------------
 (defun cme-find-big-file-hook ()
   "If a file is over a given size, activate some optimizations."
   (when (> (buffer-size) (* 1024 1024))
@@ -369,21 +370,21 @@
 
 (add-hook 'find-file-hook 'cme-find-big-file-hook)
 
-;; -----------------------------------------------------------------------
-;; ISEARCH - fold characters of the same kind. Des/activate with M-s '
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; ISEARCH - fold characters of the same kind. Des/activate with M-s '
+;;; ----------------------------------------------------------------------
 ;; ...in other words: ignore diacritics
 (when (>= emacs-major-version 25)
   (setq search-default-mode #'char-fold-to-regexp))
 
-;; -----------------------------------------------------------------------
-;; ENABLE EDITION OF COMPRESSED FILES
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; ENABLE EDITION OF COMPRESSED FILES
+;;; ----------------------------------------------------------------------
 (auto-compression-mode 1)
 
-;; -----------------------------------------------------------------------
-;; RECENT FILES
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; RECENT FILES
+;;; ----------------------------------------------------------------------
 (use-package recentf
   :defer 1
   :config
@@ -392,24 +393,24 @@
   (setq recentf-max-saved-items 200)
   (setq recentf-max-menu-items 60))
 
-;; -----------------------------------------------------------------------
-;; SAVE PLACE - remember last point in visited file
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; SAVE PLACE - remember last point in visited file
+;;; ----------------------------------------------------------------------
 (use-package saveplace
   :defer 1
   :config
   (setq save-place-file (locate-user-emacs-file "saveplace"))
   (save-place-mode 1))
 
-;; -----------------------------------------------------------------------
-;; Save minibuffer history
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; Save minibuffer history
+;;; ----------------------------------------------------------------------
 (setq history-length 20)
 (savehist-mode 1)
 
-;; -----------------------------------------------------------------------
-;; UNIQUIFY - how buffer names are made unique
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; UNIQUIFY - how buffer names are made unique
+;;; ----------------------------------------------------------------------
 (use-package emacs
   :defer 2
   :config
@@ -418,9 +419,9 @@
   (setq uniquify-after-kill-buffer-p t) ; rename after killing uniquified
   (setq uniquify-ignore-buffers-re "^\*") ) ; do not uniquify these
 
-;; -----------------------------------------------------------------------
-;; MIDNIGHT - clean-buffer-list at midnight
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; MIDNIGHT - clean-buffer-list at midnight
+;;; ----------------------------------------------------------------------
 (use-package midnight
   :defer 6
   :config (midnight-mode 1)
@@ -428,10 +429,10 @@
   ;; nb of days before a buffer becomes eligible for autokilling
   (clean-buffer-list-delay-general 3))
 
-;; -----------------------------------------------------------------------
-;; HYDRA
+;;; ----------------------------------------------------------------------
+;;; HYDRA
 ;; https://github.com/abo-abo/hydra
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package hydra
   :defer 4)
 
@@ -449,18 +450,18 @@
    ("w" whitespace-mode "whitespace")
    ("q" nil "cancel")))
 
-;; -----------------------------------------------------------------------
-;; WINNER-MODE - navigate in window config with C-c right/left
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; WINNER-MODE - navigate in window config with C-c right/left
+;;; ----------------------------------------------------------------------
 (use-package winner
-  :defer 4
+  :defer 6
   :config (winner-mode 1))
 
-;; -----------------------------------------------------------------------
-;; WINDMOVE - navigate buffers with S-arrow
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; WINDMOVE - navigate buffers with S-arrow
+;;; ----------------------------------------------------------------------
 (use-package windmove
-  :defer 6
+  :defer 4
   :config
   (windmove-default-keybindings))
 
@@ -504,12 +505,12 @@
       (shrink-window arg)
     (enlarge-window arg)))
 
-;; -----------------------------------------------------------------------
-;; DIRED
+;;; ----------------------------------------------------------------------
+;;; DIRED
 ;;  C-x C-q: edit dired buffer (enter wdired)
 ;;  j: jump to a file
 ;;  ^: open parent folder
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package dired
   :ensure nil ; do not install because it does not exist
   :commands (dired dired-jump)
@@ -531,23 +532,23 @@
               ([remap dired-up-directory] . 'dired-single-up-directory)
               ([remap dired-mouse-find-file-other-window] . 'dired-single-buffer-mouse) ))
 
-;; -----------------------------------------------------------------------
-;; HUNGRY DELETE
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; HUNGRY DELETE
+;;; ----------------------------------------------------------------------
 (use-package hungry-delete
-  :defer 2
+  :defer 1
   :diminish hungry-delete-mode
   :config (global-hungry-delete-mode))
 
-;; -----------------------------------------------------------------------
-;; SWIPER: IVY:completion & COUNSEL:command completion & SWIPER:isearch
+;;; ----------------------------------------------------------------------
+;;; SWIPER: IVY:completion & COUNSEL:command completion & SWIPER:isearch
 ;; https://github.com/abo-abo/swiper
 ;; M-j extend the minibuffer input with the next word
 ;; M-r toggle regexp
 ;; C-M-j select current input
 ;; C-j ou / complete directory
 ;; C-c C-o ivy-occur  save the completion session to a buffer
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package counsel
   :diminish
   :bind (:map minibuffer-local-map
@@ -582,23 +583,23 @@
   :init
   (ivy-rich-mode 1))
 
-;; -----------------------------------------------------------------------
-;; SMEX
+;;; ----------------------------------------------------------------------
+;;; SMEX
 ;; sort commands by frequency
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package smex
   :config (smex-initialize))
 
-;; -----------------------------------------------------------------------
-;; AVY - Jump to visible char
+;;; ----------------------------------------------------------------------
+;;; AVY - Jump to visible char
 ;; https://github.com/abo-abo/avy
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 ;;(use-package avy
 ;;  :bind ("M-s" . avy-goto-char))
 
-;; -----------------------------------------------------------------------
-;; GREP
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; GREP
+;;; ----------------------------------------------------------------------
 (when win32-p
   ;; ms find might be in the path before cygwin's
   (setq find-program "c:/cygwin64/bin/find.exe")
@@ -618,11 +619,11 @@
   ;; Solution: force it to use cygwin's null device
   (setq null-device "/dev/null"))
 
-;; -----------------------------------------------------------------------
-;; WGREP
+;;; ----------------------------------------------------------------------
+;;; WGREP
 ;; Edit a grep buffer and apply those changes to the file buffer
 ;; https://github.com/mhayashi1120/Emacs-wgrep
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package wgrep
   :defer 2)
 
@@ -635,29 +636,29 @@
 ;; then, save the current completion session to a buffer with ivy-occur C-c C-o
 ;; Then change to wgrep
 
-;; -----------------------------------------------------------------------
-;; AG - The silversearcher
+;;; ----------------------------------------------------------------------
+;;; AG - The silversearcher
 ;; On windows, install with cygwin
 ;; https://github.com/ggreer/the_silver_searcher
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package ag
   :defer 2)
 
 ;; (use-package wgrep-ag
 ;;   :after (wgrep ag))
 
-;; -----------------------------------------------------------------------
-;; WHICH-KEY shows the keybindings of entered commads
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; WHICH-KEY shows the keybindings of entered commads
+;;; ----------------------------------------------------------------------
 (use-package which-key
   :defer 2
   :diminish which-key-mode
   :config (which-key-mode))
 
-;; -----------------------------------------------------------------------
-;; UNDO TREE      tree: C-x u     undo: C-_   redo: M-_
+;;; ----------------------------------------------------------------------
+;;; UNDO TREE      tree: C-x u     undo: C-_   redo: M-_
 ;; https://gitlab.com/tsc25/undo-tree
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package undo-tree
   :diminish undo-tree-mode
   :commands (undo-tree-visualize)
@@ -668,9 +669,9 @@
   (setq undo-tree-visualizer-timestamps t)
   (global-undo-tree-mode 1))
 
-;; -----------------------------------------------------------------------
-;; EDIFF DIFF MODE
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; EDIFF DIFF MODE
+;;; ----------------------------------------------------------------------
 (use-package diff-mode
   :defer 2
   :config
@@ -680,10 +681,10 @@
   ;; use a vertical layout
   (setq ediff-split-window-function 'split-window-horizontally))
 
-;; -----------------------------------------------------------------------
-;; SHELL MODE
+;;; ----------------------------------------------------------------------
+;;; SHELL MODE
 ;; http://www.cygwin.com/faq/faq-nochunks.html#faq.using.ntemacs
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (when win32-p
   (setq exec-path (cons "C:/cygwin/bin" exec-path))
   (setenv "PATH" (concat "C:\\cygwin\\bin;" (getenv "PATH")))
@@ -714,9 +715,9 @@
   (add-hook 'comint-output-filter-functions
             'comint-strip-ctrl-m) )
 
-;; -----------------------------------------------------------------------
-;; TRAMP
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; TRAMP
+;;; ----------------------------------------------------------------------
 (use-package tramp
   :defer 2
   :config
@@ -729,18 +730,18 @@
     ;; and then C-x C-f //plinkx:wasabi:toto.cpp
     (setq tramp-default-method "plinkx")) )
 
-;; -----------------------------------------------------------------------
-;; ibuffer MODE
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; ibuffer MODE
+;;; ----------------------------------------------------------------------
 ;; do not show empty groups
 (setq ibuffer-show-empty-filter-groups nil)
 
 ;; do not ask confirmation when deleting
 (setq ibuffer-expert t)
 
-;; -----------------------------------------------------------------------
-;; GIT
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; GIT
+;;; ----------------------------------------------------------------------
 ;; https://magit.vc
 (use-package magit
   :pin melpa
@@ -758,15 +759,15 @@
 
 ;; git-gutter? blamer?
 
-;; -----------------------------------------------------------------------
-;; PROJECTILE - project management
+;;; ----------------------------------------------------------------------
+;;; PROJECTILE - project management
 ;; https://github.com/bbatsov/projectile
 ;; http://projectile.readthedocs.io/en/latest/
 ;; project: s-p p    file: s-p f     dir: s-p d    help: s-p C-h
 ;; grep: s-p s g
 ;; switch to file with other extension: s-p a
 ;; regenerate tags: s-p R    search: s-p j  see projectile-tags-command
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package projectile
   :pin melpa-stable
   :bind-keymap
@@ -779,9 +780,9 @@
   (setq projectile-switch-project-action  'projectile-dired)
   (projectile-mode 1))
 
-;; -----------------------------------------------------------------------
-;; COMPLETION - HIPPIE & ABBREVIATIONS
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; COMPLETION - HIPPIE & ABBREVIATIONS
+;;; ----------------------------------------------------------------------
 ;; hippie-expand is built-in
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "M-RET") 'hippie-expand)
@@ -803,10 +804,10 @@
         try-expand-list                    ; as a list
         ))
 
-;; -----------------------------------------------------------------------
-;; COMPANY - complete anything
+;;; ----------------------------------------------------------------------
+;;; COMPANY - complete anything
 ;; http://company-mode.github.io/
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package company
   :diminish company-mode
   :config
@@ -825,23 +826,23 @@
               ([remap indent-for-tab-command] . 'company-indent-or-complete-common)
               ))
 
-;; -----------------------------------------------------------------------
-;; FLYCHECK
+;;; ----------------------------------------------------------------------
+;;; FLYCHECK
 ;; http://www.flycheck.org/en/latest/
 ;; C-c !
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package flycheck
   :commands flycheck-mode
   :config
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   :hook
-  (flycheck-error-list-mode-hook . visual-line-mode))
+  (flycheck-error-list-mode . visual-line-mode))
 
-;; -----------------------------------------------------------------------
-;; LSP-MODE : language server protocol
+;;; ----------------------------------------------------------------------
+;;; LSP-MODE : language server protocol
 ;; https://emacs-lsp.github.io/lsp-mode/
 ;; lsp-workspace-restart : in case of problem, restart server
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :init
@@ -881,7 +882,7 @@
 (use-package lsp-ivy
   :commands lsp-ivy-workspace-symbol)
 
-;; DAP-MODE : debug adapter protocol
+;;; DAP-MODE : debug adapter protocol
 ;; https://www.youtube.com/watch?v=0bilcQVSlbM&list=PLEoMzSkcN8oNvsrtk_iZSb94krGRofFjN&index=2
 ;; https://emacs-lsp.github.io/dap-mode/
 ;; Cmmands:
@@ -899,9 +900,9 @@
               ("<f5>" . dap-debug)
               ("M-<f5>" . dap-hydra)) )
 
-;; -----------------------------------------------------------------------
-;; COMPILATION
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; COMPILATION
+;;; ----------------------------------------------------------------------
 (setq compilation-window-height 8)
 
 ;; (defadvice compile (around around-compile)
@@ -922,7 +923,7 @@
 
            ;;no errors, make the compilation window go away in 0.5 seconds
            ;;(run-at-time 0.5 nil 'delete-windows-on buf)
-           (run-at-time 0.5 nil 'winner-undo) ;'cme-restore-window-config)
+           (run-at-time 0.5 nil 'winner-undo)
            (message "COMPILATION SUCCESSFUL !")))))
 
 ;(add-hook 'gdb-mode-hook
@@ -938,14 +939,16 @@
 
 (setq gdb-many-windows t)
 
-;; -----------------------------------------------------------------------
-;; YASNIPPET - Code templates
+;;; ----------------------------------------------------------------------
+;;; YASNIPPET - Code templates
 ;; TAB: expansion; yas-describe-table; yas-insert-snippet
 ;; http://joaotavora.github.io/yasnippet/
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 (use-package yasnippet
   :diminish yas-minor-mode
-  :hook (prog . yas-minor-mode) )
+  :hook
+  ;; has no effect because the scratch buffer is in prog mode
+  (prog-mode . yas-minor-mode) )
 
 (use-package yasnippet-snippets
   :after (yasnippet) )
@@ -953,9 +956,9 @@
 ;; we can also activate it for some modes only. eg:
 ;; (add-hook 'c++-mode-hook 'yas-minor-mode)
 
-;; -----------------------------------------------------------------------
-;; LOAD MY OTHER CONFIG FILES
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; LOAD OTHER CONFIG FILES
+;;; ----------------------------------------------------------------------
 (load "setup-misc-functions.el")
 (load "setup-browse.el")
 (load "setup-org.el")
@@ -971,27 +974,26 @@
 ;; (load "sap-misc.el")
 ;; (load "sap-browse.el")
 
-;; -----------------------------------------------------------------------
-;; START SERVER
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; START SERVER
+;;; ----------------------------------------------------------------------
 (require 'server)
 (unless (server-running-p)
   (server-start))
 
-;; -----------------------------------------------------------------------
-;; TIE SOME FILE EXTENSIONS TO MODES
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; TIE SOME FILE EXTENSIONS TO MODES
+;;; ----------------------------------------------------------------------
 (setq auto-mode-alist
       (append
        '(("\\.gmk$"         . makefile-mode)
          ("\\.mak$"         . makefile-mode))
        auto-mode-alist))
 
-;; -----------------------------------------------------------------------
-;; KEY BINDINGS
-;;
+;;; ----------------------------------------------------------------------
+;;; KEY BINDINGS
 ;; M-x describe-bindings to view all bindings
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 
 ;; C-x @ h adds the hyper flag to the next character, C-x @ s adds the super
 (when win32-p
@@ -1028,9 +1030,9 @@
 
 (global-set-key (kbd "C-x p")         'proced)
 
-;; -----------------------------------------------------------------------
-;; ALIAS DEFINITIONS
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; ALIAS DEFINITIONS
+;;; ----------------------------------------------------------------------
 (defalias 'bb    'bury-buffer)
 (defalias 'ra    'cme-revert-all-buffers)
 (defalias 'rb    '(lambda () (interactive) (revert-buffer t t)))
@@ -1045,7 +1047,7 @@
 
 (defalias 'ffap  'find-file-at-point)
 
-;; -----------------------------------------------------------------------
-;; Make gc pauses faster by decreasing the threshold.
-;; -----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
+;;; Make gc pauses faster by decreasing the threshold.
+;;; ----------------------------------------------------------------------
 (setq gc-cons-threshold (* 2 1000 1000))

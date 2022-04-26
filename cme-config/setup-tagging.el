@@ -1,12 +1,12 @@
 ;;; -----------------------------------------------------------------------
-;;;; GGTAGS : a frontend to GNU GLOBAL
-;; http://www.gnu.org/software/global : needs to be on path
-;; Can also use exuberant ctags as backend
-;; https://github.com/leoliu/ggtags
-;; M-.    jump to definition
-;; M-,    pop mark
-;; C-M-.  find
-;; !! loading ggtags modifies M-. Use M-, to abort navigation
+;;; GGTAGS : a frontend to GNU GLOBAL
+;;; http://www.gnu.org/software/global : needs to be on path
+;;; Can also use exuberant ctags as backend
+;;; https://github.com/leoliu/ggtags
+;;; M-.    jump to definition
+;;; M-,    pop mark
+;;; C-M-.  find
+;;; !! loading ggtags modifies M-. Use M-, to abort navigation
 ;;; -----------------------------------------------------------------------
 (use-package ggtags
   :diminish ggtags-mode
@@ -29,7 +29,7 @@
 ;;a essayer (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
 
 ;;; -----------------------------------------------------------------------
-;;;; TAGGING WITH Exuberant ctags from http://ctags.sourceforge.net/
+;;; TAGGING WITH Exuberant ctags from http://ctags.sourceforge.net/
 ;;; -----------------------------------------------------------------------
 (defmacro cme-make-tagger (command)
   "Make a function that will use the given command to generate a TAGS  file in a directory"
