@@ -29,11 +29,9 @@
 
 (let ((class '((class color) (min-colors 89)))
       (montmirail-fg          "#0b132b")
-      (montmirail-fg+1        "#152451")
-      (montmirail-fg+2        "#1d3272")
-      (montmirail-fg+3        "#264192")
-      (montmirail-fg+4        "#2e4fb2")
-      (montmirail-fg+5        "#3c60cd")
+      (montmirail-fg+1        "#1d3272")
+      (montmirail-fg+2        "#264192")
+      (montmirail-fg+3        "#3c60cd")
       (montmirail-bg-5        "#ff9d0a")
       (montmirail-bg-4        "#ffad33")
       (montmirail-bg-3        "#ffbe5c")
@@ -42,45 +40,25 @@
       (montmirail-bg          "#ffebcd")
       (montmirail-bg+1        "#fff7eb")
 
-      (montmirail-red-6       "#520000")
-      (montmirail-red-5       "#660000")
-      (montmirail-red-4       "#7a0000")
-      (montmirail-red-3       "#8f0000")
-      (montmirail-red-2       "#a30000")
-      (montmirail-red-1       "#b80000")
-      (montmirail-red         "#d00000")firebrick
-      (montmirail-red+1       "#ff0a0a")
-      (montmirail-red+2       "#ff3333")
+      (montmirail-red-3       "#660000")
+      (montmirail-red-2       "#7a0000")
+      (montmirail-red-1       "#a30000")
+      (montmirail-red         "#d00000")
+      (montmirail-red+1       "#ff3333")
       (montmirail-orange      "#ff7f50")
       (montmirail-yellow      "#ffe066")
-      (montmirail-green-5     "#143e1a")
-      (montmirail-green-4     "#1e5c26")
-      (montmirail-green-3     "#287b33")
-      (montmirail-green-2     "#2d8b39")
-      (montmirail-green-1     "#37a946")
+      (montmirail-green-2     "#1e5c26")
+      (montmirail-green-1     "#287b33")
       (montmirail-green       "#3cbb4d")
-      (montmirail-green+1     "#56c865")
-      (montmirail-green+2     "#74d281")
-      (montmirail-green+3     "#93dc9d")
-      (montmirail-green+4     "#b2e6b9")
+      (montmirail-green+1     "#74d281")
+      (montmirail-green+2     "#b2e6b9")
       (montmirail-cyan        "#1c7293")
-      (montmirail-blue        "#61bdf2")
-      (montmirail-violet      "#9448bc")
+      (montmirail-blue1       "#0000ff")
+      (montmirail-blue2       "#61bdf2")
+      (montmirail-purple      "purple")
       (montmirail-brown       "#7a4900")
       (montmirail-pink        "#ff4f79")
       )
-
-  ;; fg #0b132b
-  ;; #63b4d1 #7699d4 #9448bc  #480355 (russian violet)
-  ;; #e63462 #fe5f55 #c7efcf
-  ;; #0b6e4f "#fa9f42"
-  ;; #7f95d1
-  ;; #7692ff #de3c4b
-  ;; #a11692 #ff4f79
-  ;; #f25f5c #ffe066 #247ba0 #70c1b3 #89ce94 #7d5ba6
-  ;; #a30000 #ff7700 #efd28d #00afb5
-  ;; #1c7293 #9eb3c2 #ff212e #f4d06f
-
 
   (custom-theme-set-faces
    'montmirail
@@ -89,31 +67,31 @@
    `(fringe ((,class (:foreground ,montmirail-fg :background ,montmirail-bg+1))))
    `(cursor ((,class :background ,montmirail-orange)))
 
-   `(highlight ((,class (:background ,montmirail-green+4))))
+   `(highlight ((,class (:background ,montmirail-green+2))))
    `(success ((,class (:foreground ,montmirail-green :weight bold))))
    `(warning ((,class (:foreground ,montmirail-orange :weight bold))))
    `(tooltip ((,class (:foreground ,montmirail-fg :background ,montmirail-bg+1))))
 
    `(menu ((,class (:foreground ,montmirail-fg :background ,montmirail-bg))))
-   `(minibuffer-prompt ((,class (:foreground ,montmirail-fg+4))))
+   `(minibuffer-prompt ((,class (:foreground ,montmirail-fg+1))))
 
    `(region ((,class (:background ,montmirail-bg-2 :extend t))))
    `(secondary-selection ((,class (:background ,montmirail-bg+1))))
-   `(trailing-whitespace ((,class (:background ,montmirail-violet))))
+   `(trailing-whitespace ((,class (:background ,montmirail-pink))))
    `(vertical-border ((,class (:foreground ,montmirail-fg))))
 
    ;; isearch
-   `(isearch ((,class (:foreground ,montmirail-fg :weight bold :background ,montmirail-bg-3))))
-   `(isearch-fail ((,class (:foreground ,montmirail-fg :background ,montmirail-violet))))
+   `(isearch ((,class (:foreground ,montmirail-fg :weight bold :background ,montmirail-bg-4))))
+   `(isearch-fail ((,class (:foreground ,montmirail-fg :background ,montmirail-pink))))
    `(lazy-highlight ((,class (:foreground ,montmirail-fg :weight bold :background ,montmirail-bg-1))))
 
    ;; Font lock faces
    `(font-lock-builtin-face ((,class (:foreground ,montmirail-fg+3)))) ; "dark slate blue"
    `(font-lock-comment-face ((,class (:foreground ,montmirail-red))))
    `(font-lock-constant-face ((,class (:foreground ,montmirail-cyan)))); "dark cyan"
-   `(font-lock-function-name-face ((,class (:foreground ,montmirail-fg+5))))
-   `(font-lock-keyword-face ((,class (:foreground ,montmirail-violet :weight bold)))) ; "purple"
-   `(font-lock-string-face ((,class (:foreground ,montmirail-red-3)))); "VioletRed4"
+   `(font-lock-function-name-face ((,class (:foreground ,montmirail-blue1))))
+   `(font-lock-keyword-face ((,class (:foreground ,montmirail-purple :weight bold))))
+   `(font-lock-string-face ((,class (:foreground ,montmirail-red-2)))); "VioletRed4"
    `(font-lock-type-face ((,class (:foreground ,montmirail-green :weight bold))))
    `(font-lock-variable-name-face ((,class (:foreground ,montmirail-brown)))) ; "sienna"
    `(font-lock-doc-face ((t (:inherit (font-lock-string-face)))))
