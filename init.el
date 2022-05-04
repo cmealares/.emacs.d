@@ -201,10 +201,13 @@
 
 (package-initialize)
 
+(unless package-archive-contents
+  (package-refresh-contents))
+
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
   (package-install 'use-package))
 
+(require 'use-package)
 (setq use-package-always-ensure t)
 (setq use-package-verbose t) ;; helps profile package loading
 
@@ -307,9 +310,8 @@
 (load-theme 'montmirail t)
 ;; use disable-theme to turn off
 
-
 ;;; ----------------------------------------------------------------------
-;;; SPACELINE
+;;; MODELINE
 ;; https://github.com/TheBB/spaceline
 ;;; ----------------------------------------------------------------------
 (use-package spaceline
@@ -338,7 +340,7 @@
 ;; light to follow the cursor
 ;;; ----------------------------------------------------------------------
 (use-package beacon
-  :defer 6
+  :defer 3
   :diminish
   :config
   (setq beacon-size 80)
@@ -386,7 +388,6 @@
 ;;; RECENT FILES
 ;;; ----------------------------------------------------------------------
 (use-package recentf
-  :defer 1
   :config
   ; speedup load time for remote files that are not accessible
   (setq recentf-keep '(file-remote-p file-readable-p))
@@ -397,7 +398,6 @@
 ;;; SAVE PLACE - remember last point in visited file
 ;;; ----------------------------------------------------------------------
 (use-package saveplace
-  :defer 1
   :config
   (setq save-place-file (locate-user-emacs-file "saveplace"))
   (save-place-mode 1))
@@ -412,7 +412,6 @@
 ;;; UNIQUIFY - how buffer names are made unique
 ;;; ----------------------------------------------------------------------
 (use-package emacs
-  :defer 2
   :config
   (setq uniquify-buffer-name-style 'post-forward)
   (setq uniquify-separator "|")
@@ -423,7 +422,7 @@
 ;;; MIDNIGHT - clean-buffer-list at midnight
 ;;; ----------------------------------------------------------------------
 (use-package midnight
-  :defer 6
+  :defer 3
   :config (midnight-mode 1)
   :custom
   ;; nb of days before a buffer becomes eligible for autokilling
@@ -433,8 +432,7 @@
 ;;; HYDRA
 ;; https://github.com/abo-abo/hydra
 ;;; ----------------------------------------------------------------------
-(use-package hydra
-  :defer 4)
+(use-package hydra)
 
 ;; Hydra for modes that toggle on and off
 (global-set-key
@@ -454,14 +452,14 @@
 ;;; WINNER-MODE - navigate in window config with C-c right/left
 ;;; ----------------------------------------------------------------------
 (use-package winner
-  :defer 6
+  :defer 1
   :config (winner-mode 1))
 
 ;;; ----------------------------------------------------------------------
 ;;; WINDMOVE - navigate buffers with S-arrow
 ;;; ----------------------------------------------------------------------
 (use-package windmove
-  :defer 4
+  :defer 1
   :config
   (windmove-default-keybindings))
 
@@ -625,7 +623,7 @@
 ;; https://github.com/mhayashi1120/Emacs-wgrep
 ;;; ----------------------------------------------------------------------
 (use-package wgrep
-  :defer 2)
+  :commands (wgrep-change-to-wgrep-mode))
 
 ;; Refactorings
 ;; - Run search with a grep command (projectile-grep)
@@ -642,7 +640,7 @@
 ;; https://github.com/ggreer/the_silver_searcher
 ;;; ----------------------------------------------------------------------
 (use-package ag
-  :defer 2)
+  :commands (ag))
 
 ;; (use-package wgrep-ag
 ;;   :after (wgrep ag))
@@ -651,7 +649,7 @@
 ;;; WHICH-KEY shows the keybindings of entered commads
 ;;; ----------------------------------------------------------------------
 (use-package which-key
-  :defer 2
+  :defer 1
   :diminish which-key-mode
   :config (which-key-mode))
 
@@ -673,7 +671,6 @@
 ;;; EDIFF DIFF MODE
 ;;; ----------------------------------------------------------------------
 (use-package diff-mode
-  :defer 2
   :config
   (setq ediff-diff-options "-w")
   ;; do not spawn a new frame for the ediff control window
@@ -719,7 +716,7 @@
 ;;; TRAMP
 ;;; ----------------------------------------------------------------------
 (use-package tramp
-  :defer 2
+  :defer 3
   :config
   (setq tramp-verbose 6)
   ;;(setq tramp-verbose 10)
