@@ -106,7 +106,7 @@
 (when (fboundp 'mouse-wheel-mode) (mouse-wheel-mode 1))
 
 ;; default width for fill-paragraph
-(custom-set-variables '(fill-column 100))
+(custom-set-variables '(fill-column 90))
 
 ;; enable upcase & down case region
 (put 'upcase-region   'disabled nil)
@@ -271,8 +271,6 @@
 ;;; ----------------------------------------------------------------------
 (let ((themes-dir (locate-user-emacs-file "themes")))
   (setq custom-theme-directory themes-dir))
-
-(defconst cme-background-color "blanched almond")
 
 ;; Frame properties. To display all: (prin1-to-string (frame-parameters))
 (when window-system
