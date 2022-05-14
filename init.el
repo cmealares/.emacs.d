@@ -812,6 +812,10 @@
   (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 3)
   (setq tab-always-indent 'complete)
+
+  ;; do not downcase the returned canditates
+  (setq company-dabbrev-downcase nil)
+
   (global-company-mode 1)
 
   :bind (:map company-mode-map
