@@ -224,6 +224,72 @@
   (setq esup-depth 0)) ; workaround bug on compiled files
 
 ;;; ----------------------------------------------------------------------
+;;; THEME
+;; https://batsov.com/articles/2012/02/19/color-theming-in-emacs-reloaded/
+;; http://emacsthemes.com/
+;;; ----------------------------------------------------------------------
+(let ((themes-dir (locate-user-emacs-file "themes")))
+  (setq custom-theme-directory themes-dir))
+
+(unless (package-installed-p 'zenburn-theme)
+  (package-install 'zenburn-theme))
+
+(unless (package-installed-p 'spacemacs-theme)
+  (package-install 'spacemacs-theme))
+
+(load-theme 'montmirail t)
+;; use disable-theme to turn off
+
+;;; ----------------------------------------------------------------------
+;;; THE FONT
+;; What facet is used? describe-face
+;; What font is used? describe-char and look at line in "display"
+;; Frame properties. To display all: (prin1-to-string (frame-parameters))
+;; List all fonts (print (font-family-list))
+;; List all loaded faces: list-faces-display
+;;; ----------------------------------------------------------------------
+(when window-system
+  (add-to-list 'default-frame-alist '(height . 60))
+  (add-to-list 'default-frame-alist '(width . 85))
+
+  ;; Some free fonts:
+  ;;    Monospaced
+  ;;       cascadia code
+  ;;       source code pro
+  ;;       code new roman
+  ;;       roboto mono
+  ;;       jetbrains mono
+  ;;       ubuntu mono
+  ;;       mononoki
+  ;;    Variable width:
+  ;;       cantarell
+
+  (defconst cme-monospaced-font
+    (cond
+     ((find-font (font-spec :name "Cascadia Code")) "Cascadia Code")
+     ((find-font (font-spec :name "Source Code Pro")) "Source Code Pro")
+     ((find-font (font-spec :name "Consolas")) "Consolas")
+     ;; on debian
+     ((find-font (font-spec :name "DejaVu Sans Mono-11")) "DejaVu Sans Mono-11")
+     (t (progn (message "Cannot find a monospaced font") nil) )))
+
+  (defconst cme-proportional-font
+    (cond
+     ((find-font (font-spec :name "Cantarell")) "Cantarell")
+     (t (progn (message "Cannot find a proportional font")
+               cme-monospaced-font) )))
+
+  (when cme-monospaced-font
+    (set-face-attribute 'default nil :font cme-monospaced-font)
+    ;; fixed pitch face
+    (set-face-attribute 'fixed-pitch nil :font cme-monospaced-font) )
+
+  (when cme-proportional-font ;; is used in org mode setup
+    ;; variable pitch face
+    (set-face-attribute 'variable-pitch nil :font cme-proportional-font :weight 'regular))
+)
+
+;;; ----------------------------------------------------------------------
 ;;; ENCODING and UNICODE - use UTF-8
 ;; Inserting characters
 ;;     insert-char C-x 8 <RET>
@@ -237,10 +303,6 @@
 (set-default-coding-systems 'utf-8)
 
 ;; "C-x =" and "C-u C-x =" provide complete unicode information of a character
-;; Now built-in:
-;;Get info file at: http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
-;;(let ((x (locate-user-emacs-file "UnicodeData.txt")))
-;;  (when (file-exists-p x) (setq describe-char-unicodedata-file x)))
 
 (defun cme-decode-utf8 (l)
   "Decode list L of hexa numbers into a string."
@@ -259,54 +321,6 @@
       ((decimal (encode-coding-string str 'utf-8)))
     (princ
      (mapcar (lambda (x) (format "%X" x))  decimal))))
-
-;;; ----------------------------------------------------------------------
-;;; THEME
-;; https://batsov.com/articles/2012/02/19/color-theming-in-emacs-reloaded/
-;; http://emacsthemes.com/
-;; What facet is used? describe-face
-;; What font is used? describe-char and look at line in "display"
-;; List all fonts (print (font-family-list))
-;; List all loaded faces: list-faces-display
-;;; ----------------------------------------------------------------------
-(let ((themes-dir (locate-user-emacs-file "themes")))
-  (setq custom-theme-directory themes-dir))
-
-;; Frame properties. To display all: (prin1-to-string (frame-parameters))
-(when window-system
-  (add-to-list 'default-frame-alist '(height . 60))
-  (add-to-list 'default-frame-alist '(width . 85))
-
-  ;; some free fonts:
-  ;; source code pro
-  ;; code new roman (monospaced)
-  ;; roboto mono  (monospaced)
-  ;; hack
-  ;; jetbrains mono
-  ;; ubuntu mono
-  ;; mononoki
-
-  (when linux-p
-    (set-frame-font "DejaVu Sans Mono-11" nil t))
-
-  (when win32-p
-    (cond
-     ((find-font (font-spec :name "Cascadia Code"))
-      (set-frame-font "Cascadia Code-11" nil t))
-     ((find-font (font-spec :name "Source Code Pro"))
-      (set-frame-font "Source Code Pro-12" nil t))
-     ((find-font (font-spec :name "Consolas"))
-      (set-frame-font "Consolas-11" nil t))
-     )))
-
-(unless (package-installed-p 'zenburn-theme)
-  (package-install 'zenburn-theme))
-
-(unless (package-installed-p 'spacemacs-theme)
-  (package-install 'spacemacs-theme))
-
-(load-theme 'montmirail t)
-;; use disable-theme to turn off
 
 ;;; ----------------------------------------------------------------------
 ;;; MODELINE
@@ -674,7 +688,21 @@
   ;; do not spawn a new frame for the ediff control window
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   ;; use a vertical layout
-  (setq ediff-split-window-function 'split-window-horizontally))
+  (setq ediff-split-window-function 'split-window-horizontally)
+  ;; show ancestor
+  (setq ediff-merge-revisions-with-ancestor t)
+  )
+
+;;; ----------------------------------------------------------------------
+;;; SMERGE
+;;; smerge-ediff
+;;; ----------------------------------------------------------------------
+(use-package smerge-mode
+  :commands smerge-mode
+  :init
+  (setq smerge-command-prefix (kbd "C-c s")) )
+
+;; try with hydra
 
 ;;; ----------------------------------------------------------------------
 ;;; SHELL MODE

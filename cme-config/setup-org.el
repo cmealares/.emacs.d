@@ -2,19 +2,29 @@
 ;;; ORG MODE
 ;;; -----------------------------------------------------------------------
 (defun cme-org-mode-setup ()
+  ;;(variable-pitch-mode 1)
   (visual-line-mode 1)
   (auto-fill-mode 1) )
 
 (defun cme-org-font-setup ()
-  (dolist (face '((org-level-1 . 1.2)
-                  (org-level-2 . 1.1)
-                  (org-level-3 . 1.05)
-                  (org-level-4 . 1.0)
+  (dolist (face '((org-level-1 . 1.3)
+                  (org-level-2 . 1.25)
+                  (org-level-3 . 1.20)
+                  (org-level-4 . 1.15)
                   (org-level-5 . 1.1)
                   (org-level-6 . 1.1)
                   (org-level-7 . 1.1)
-                  (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil  :weight 'regular :height (cdr face))) )
+                  (org-level-8 . 1)))
+    (set-face-attribute (car face) nil :font cme-proportional-font :weight 'regular :height (cdr face)))
+
+  ;; Set other faces to use fixed pitch
+  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
 
 (defun cme-org-todo-setup ()
   (setq org-log-done 'time)
