@@ -249,8 +249,8 @@
 ;; List all loaded faces: list-faces-display
 ;;; ----------------------------------------------------------------------
 (when window-system
-  (add-to-list 'default-frame-alist '(height . 60))
-  (add-to-list 'default-frame-alist '(width . 85))
+  (add-to-list 'default-frame-alist '(height . 70))
+  (add-to-list 'default-frame-alist '(width . 90))
 
   ;; Some free fonts:
   ;;    Monospaced
@@ -270,7 +270,7 @@
      ((find-font (font-spec :name "Source Code Pro")) "Source Code Pro")
      ((find-font (font-spec :name "Consolas")) "Consolas")
      ;; on debian
-     ((find-font (font-spec :name "DejaVu Sans Mono-11")) "DejaVu Sans Mono-11")
+     ((find-font (font-spec :name "DejaVu Sans Mono")) "DejaVu Sans Mono")
      (t (progn (message "Cannot find a monospaced font") nil) )))
 
   (defconst cme-proportional-font
@@ -280,14 +280,16 @@
                cme-monospaced-font) )))
 
   (when cme-monospaced-font
-    (set-face-attribute 'default nil :font cme-monospaced-font)
+    (set-face-attribute 'default nil :height 110 :font cme-monospaced-font)
     ;; fixed pitch face
-    (set-face-attribute 'fixed-pitch nil :font cme-monospaced-font) )
+    (set-face-attribute 'fixed-pitch nil :height 110 :font cme-monospaced-font) )
 
   (when cme-proportional-font ;; is used in org mode setup
     ;; variable pitch face
-    (set-face-attribute 'variable-pitch nil :font cme-proportional-font :weight 'regular))
+    (set-face-attribute 'variable-pitch nil :height 130 :font cme-proportional-font :weight 'regular))
 )
+
+;; (set-frame-font "Cascadia Code-11" nil t)
 
 ;;; ----------------------------------------------------------------------
 ;;; ENCODING and UNICODE - use UTF-8
