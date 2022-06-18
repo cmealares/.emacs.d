@@ -478,11 +478,11 @@
   (windmove-default-keybindings))
 
 (defhydra hydra-splitter (global-map "C-M-s")
-  "splitter"
-  ("h" hydra-move-splitter-left "left")
-  ("j" hydra-move-splitter-down "down")
-  ("k" hydra-move-splitter-up "up")
-  ("l" hydra-move-splitter-right "right")
+  "Move window splitter"
+  ("<left>" hydra-move-splitter-left "left")
+  ("<down>" hydra-move-splitter-down "down")
+  ("<up>" hydra-move-splitter-up "up")
+  ("<right>" hydra-move-splitter-right "right")
   ("s" window-swap-states "swap windows" :color blue))
 
 (defun hydra-move-splitter-left (arg)
@@ -702,9 +702,35 @@
 (use-package smerge-mode
   :commands smerge-mode
   :init
-  (setq smerge-command-prefix (kbd "C-c s")) )
+  ;;(setq smerge-command-prefix (kbd "C-c s"))
+  )
 
-;; try with hydra
+
+(defhydra hydra-smerge (:color red :hint nil :pre (smerge-mode 1))
+  "
+Navigate       Keep               other
+----------------------------------------
+_p_: previous  _c_: current       _e_: ediff
+_n_: next      _m_: mine  <<      _u_: undo
+_j_: up        _o_: other >>      _r_: refine
+_k_: down      _a_: all           _q_: quit
+               _b_: base
+"
+  ("n" smerge-next)
+  ("p" smerge-prev)
+  ("c" smerge-keep-current)
+  ("m" smerge-keep-mine)
+  ("o" smerge-keep-other)
+  ("b" smerge-keep-base)
+  ("a" smerge-keep-all)
+  ("e" smerge-ediff)
+  ("j" previous-line)
+  ("k" forward-line)
+  ("r" smerge-refine)
+  ("u" undo)
+  ("q" nil :exit t))
+
+(global-set-key (kbd "C-c s") 'hydra-smerge/body)
 
 ;;; ----------------------------------------------------------------------
 ;;; SHELL MODE
