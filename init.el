@@ -477,13 +477,15 @@
   :config
   (windmove-default-keybindings))
 
-(defhydra hydra-splitter (global-map "C-M-s")
-  "Move window splitter"
-  ("<left>" hydra-move-splitter-left "left")
-  ("<down>" hydra-move-splitter-down "down")
-  ("<up>" hydra-move-splitter-up "up")
-  ("<right>" hydra-move-splitter-right "right")
-  ("s" window-swap-states "swap windows" :color blue))
+(global-set-key
+ (kbd "C-M-s")
+ (defhydra hydra-splitter ()
+   "Move window splitter"
+   ("<left>" hydra-move-splitter-left "left")
+   ("<down>" hydra-move-splitter-down "down")
+   ("<up>" hydra-move-splitter-up "up")
+   ("<right>" hydra-move-splitter-right "right")
+   ("s" window-swap-states "swap windows" :color blue)))
 
 (defun hydra-move-splitter-left (arg)
   "Move window splitter (ARG) left."
@@ -583,10 +585,13 @@
          ("C-c C-r" . ivy-resume)
          ("<f3>" . ivy-resume) ))
 
+;; M-j ivy-yank-word
+;; C-M-n run and next
 (use-package ivy
   :diminish ivy-mode
   :config
   (setq ivy-use-virtual-buffers t)
+  (setq ivy-use-selectable-prompt t) ;; C-p to select the candidate line
   ;;(setq enable-recursive-minibuffers t)
   (ivy-mode 1))
 
@@ -697,7 +702,7 @@
 
 ;;; ----------------------------------------------------------------------
 ;;; SMERGE
-;;; smerge-ediff
+;;; smerge-ediff command prefix is C-c ^
 ;;; ----------------------------------------------------------------------
 (use-package smerge-mode
   :commands smerge-mode
@@ -705,9 +710,10 @@
   ;;(setq smerge-command-prefix (kbd "C-c s"))
   )
 
-
-(defhydra hydra-smerge (:color red :hint nil :pre (smerge-mode 1))
-  "
+(global-set-key
+ (kbd "C-c s")
+ (defhydra hydra-smerge (:color red :hint nil :pre (smerge-mode 1))
+   "
 Navigate       Keep               other
 ----------------------------------------
 _p_: previous  _c_: current       _e_: ediff
@@ -716,21 +722,19 @@ _j_: up        _o_: other >>      _r_: refine
 _k_: down      _a_: all           _q_: quit
                _b_: base
 "
-  ("n" smerge-next)
-  ("p" smerge-prev)
-  ("c" smerge-keep-current)
-  ("m" smerge-keep-mine)
-  ("o" smerge-keep-other)
-  ("b" smerge-keep-base)
-  ("a" smerge-keep-all)
-  ("e" smerge-ediff)
-  ("j" previous-line)
-  ("k" forward-line)
-  ("r" smerge-refine)
-  ("u" undo)
-  ("q" nil :exit t))
-
-(global-set-key (kbd "C-c s") 'hydra-smerge/body)
+   ("n" smerge-next)
+   ("p" smerge-prev)
+   ("c" smerge-keep-current)
+   ("m" smerge-keep-mine)
+   ("o" smerge-keep-other)
+   ("b" smerge-keep-base)
+   ("a" smerge-keep-all)
+   ("e" smerge-ediff)
+   ("j" previous-line)
+   ("k" forward-line)
+   ("r" smerge-refine)
+   ("u" undo)
+   ("q" nil :exit t)))
 
 ;;; ----------------------------------------------------------------------
 ;;; SHELL MODE
