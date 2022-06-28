@@ -249,7 +249,7 @@
 ;; List all loaded faces: list-faces-display
 ;;; ----------------------------------------------------------------------
 (when window-system
-  (add-to-list 'default-frame-alist '(height . 70))
+  (add-to-list 'default-frame-alist '(height . 60))
   (add-to-list 'default-frame-alist '(width . 90))
 
   ;; Some free fonts:
