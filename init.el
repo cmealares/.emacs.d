@@ -583,7 +583,7 @@
   :bind (("C-s" . swiper)
          ("C-c C-s" . isearch-forward)
          ("C-c C-r" . ivy-resume)
-         ("<f3>" . ivy-resume) ))
+         ("<f6>" . ivy-resume) ))
 
 ;; M-j ivy-yank-word
 ;; C-M-n run and next
@@ -649,7 +649,7 @@
 ;; - In the result buffer, to wgrep-change-to-wgrep-mode
 ;; - Edit and then C-x Cs-
 
-;; It is also possible to search with a counsel-xxx (grep, git-grep, ag) command
+;; It is possible to search with a counsel-xxx (grep, git-grep, ag) command
 ;; then, save the current completion session to a buffer with ivy-occur C-c C-o
 ;; Then change to wgrep
 
