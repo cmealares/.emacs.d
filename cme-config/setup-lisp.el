@@ -1,16 +1,3 @@
-;;; -----------------------------------------------------------------------
-;;; PAREDIT - Lisp structured editing
-;;; https://www.emacswiki.org/emacs/ParEdit
-;;; -----------------------------------------------------------------------
-
-;; tagedit fait la meme chose pour html
-
-(use-package paredit
-  :diminish
-  :hook ((emacs-lisp-mode       . enable-paredit-mode)
-         (eval-expression-minibuffer-setup . enable-paredit-mode)
-         (lisp-mode             . enable-paredit-mode)
-         (lisp-interaction-mode . enable-paredit-mode)) )
 
 ;;; -----------------------------------------------------------------------
 ;;; ELDOC

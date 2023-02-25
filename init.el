@@ -193,11 +193,12 @@
 ;;(setq package-check-signature nil)
 
 ;; ??? temp workaround bug; avoid  melpa "has a running process"
-(when linux-p
-  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+;;(when linux-p
+;;  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+
 
 (package-initialize)
 
@@ -329,6 +330,7 @@
 ;; https://github.com/TheBB/spaceline
 ;;; ----------------------------------------------------------------------
 (use-package spaceline
+  ;;:disabled
   :defer 1
   :config
   (require 'spaceline-config)
@@ -354,6 +356,7 @@
 ;; light to follow the cursor
 ;;; ----------------------------------------------------------------------
 (use-package beacon
+  ;;:disabled   ; bug variable is void: after-focus-change-function
   :defer 3
   :diminish
   :config
@@ -1026,7 +1029,7 @@ _k_: down      _a_: all           _q_: quit
 (load "setup-json.el")
 (load "setup-javascript.el")
 (load "setup-lisp.el")
-;;(load "setup-clojure.el")
+(load "setup-clojure.el")
 ;;(load "setup-haskell.el")
 ;;(load "setup-python.el")
 
