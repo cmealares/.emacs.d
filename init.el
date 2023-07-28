@@ -647,7 +647,7 @@
 ;; Refactorings
 ;; - Run search with a grep command (projectile-grep)
 ;; - In the result buffer, to wgrep-change-to-wgrep-mode
-;; - Edit and then C-x Cs-
+;; - Edit and then C-x C-s / C-c C-k
 
 ;; It is possible to search with a counsel-xxx (grep, git-grep, ag) command
 ;; then, save the current completion session to a buffer with ivy-occur C-c C-o
@@ -819,6 +819,7 @@ _k_: down      _a_: all           _q_: quit
 ;; https://github.com/bbatsov/projectile
 ;; http://projectile.readthedocs.io/en/latest/
 ;; project: s-p p    file: s-p f     dir: s-p d    help: s-p C-h
+;; projectile-invalidate-cache
 ;; grep: s-p s g
 ;; switch to file with other extension: s-p a
 ;; regenerate tags: s-p R    search: s-p j  see projectile-tags-command
@@ -1031,7 +1032,7 @@ _k_: down      _a_: all           _q_: quit
 ;;(load "setup-python.el")
 
 ;; (load "sap-misc.el")
-;; (load "sap-browse.el")
+(load "sap-browse.el")
 
 ;;; ----------------------------------------------------------------------
 ;;; START SERVER
@@ -1101,6 +1102,7 @@ _k_: down      _a_: all           _q_: quit
 (defalias 'fgd   'find-grep-dired)
 (defalias 'gfd   'find-grep-dired)
 (defalias 'fd    'find-dired)
+(defalias 'is    'isearch-forward)
 
 (defalias 'eb    'ediff-buffers)
 
