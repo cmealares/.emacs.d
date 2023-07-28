@@ -1,7 +1,10 @@
-
-REM where it is installed
+@echo off
 
 set EMACSROOT=C:\Program Files\emacs-27.2-x86_64
+
+echo Init file will be searched in %HOME%
+echo Emacs is installed in %EMACSROOT%
+
 
 REM set PATH=%PATH%;C:\Program Files (x86)\PuTTY
 REM set PATH=%PATH%;C:\Program Files (x86)\glo653wb\bin
@@ -11,8 +14,8 @@ REM rmdir C:\Users\I051117\AppData\Roaming\.emacs.d /s /q
 
 
 
-REM -debug-init
-"%EMACSROOT%\bin\runemacs.exe"  
+REM --debug-init
+"%EMACSROOT%\bin\runemacs.exe"
 
 REM Start emacs client
 REM -c create a new frame
