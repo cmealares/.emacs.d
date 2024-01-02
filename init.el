@@ -1098,7 +1098,7 @@ _k_: down      _a_: all           _q_: quit
 ;;; ----------------------------------------------------------------------
 (defalias 'bb    'bury-buffer)
 (defalias 'ra    'cme-revert-all-buffers)
-(defalias 'rb    '(lambda () (interactive) (revert-buffer t t)))
+(defalias 'rb    #'(lambda () (interactive) (revert-buffer t t)))
 
 (defalias 'ff    'find-name-dired)
 (defalias 'gf    'grep-find)
