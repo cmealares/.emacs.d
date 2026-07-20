@@ -270,17 +270,18 @@
 
 (defconst cme-monospaced-font
   (cond
+   ((find-font (font-spec :name "Fira Code")) "Fira Code")
    ((find-font (font-spec :name "Cascadia Code")) "Cascadia Code")
    ((find-font (font-spec :name "Source Code Pro")) "Source Code Pro")
-   ((find-font (font-spec :name "Fira Code")) "Fira Code")
    ((find-font (font-spec :name "Consolas")) "Consolas")
    ((find-font (font-spec :name "DejaVu Sans Mono")) "DejaVu Sans Mono")
    (t (progn (message "Cannot find a monospaced font") nil) )))
 
 (when cme-monospaced-font
-  (set-face-attribute 'default nil :height 110 :font cme-monospaced-font)
+  ;; default must have a fixed height, the others must be relative (float)
+  (set-face-attribute 'default nil :height 120 :font cme-monospaced-font)
   ;; fixed pitch face
-  (set-face-attribute 'fixed-pitch nil :height 110 :font cme-monospaced-font) )
+  (set-face-attribute 'fixed-pitch nil :height 1.0 :font cme-monospaced-font) )
 
 (defconst cme-proportional-font
   (cond
@@ -290,7 +291,7 @@
 
 (when cme-proportional-font ;;  used in org mode setup
   ;; variable pitch face
-  (set-face-attribute 'variable-pitch nil :height 130 :font cme-proportional-font)))
+  (set-face-attribute 'variable-pitch nil :height 1.0 :font cme-proportional-font)))
 
 
 ;;; ----------------------------------------------------------------------
