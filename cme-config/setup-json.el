@@ -3,12 +3,14 @@
 ;;; -----------------------------------------------------------------------
 
 (use-package origami
+  :ensure t
   :bind (("C-c f" . origami-recursively-toggle-node)
          ("C-c F" . origami-toggle-all-nodes)))
 
 
 ;; js2-mode can also be used for json files
 (use-package json-mode
+  :ensure t
   :hook (json-mode . origami-mode))
 
 

@@ -9,6 +9,7 @@
 ;;; !! loading ggtags modifies M-. Use M-, to abort navigation
 ;;; -----------------------------------------------------------------------
 (use-package ggtags
+  :ensure t
   :diminish ggtags-mode
   :bind (:map ggtags-mode-map
               ;;("C-c g s" . ggtags-find-other-symbol)

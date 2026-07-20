@@ -75,11 +75,6 @@
 ;; no splash screen
 (setq inhibit-startup-message t)
 
-;; no UI
-(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-
 ;; get rid of yes or no questions
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -188,31 +183,26 @@
 ;;     :custom customized variables
 ;;; ----------------------------------------------------------------------
 (require 'package)
-
-;; ??? temp avoid failures for missing signature
-;;(setq package-check-signature nil)
-
-;; ??? temp workaround bug; avoid  melpa "has a running process"
-;;(when linux-p
-;;  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+(package-initialize)
 
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 
+(when (< emacs-major-version 29)
+  (unless (package-installed-p 'use-package)
+    (unless package-archive-contents
+      (package-refresh-contents))
+    (package-install 'use-package)))
 
-(package-initialize)
+(use-package use-package
+  :demand t
+  :ensure nil
+  :init
+  (setq use-package-verbose t) ;; helps profile package loading
+  )
 
-(unless package-archive-contents
-  (package-refresh-contents))
-
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-
-(require 'use-package)
-(setq use-package-always-ensure t)
-(setq use-package-verbose t) ;; helps profile package loading
-
-(use-package diminish)
+(use-package diminish
+  :ensure t)
 
 ;;; ----------------------------------------------------------------------
 ;;; ESUP : emacs startup profiler
@@ -221,6 +211,7 @@
 ;;; ----------------------------------------------------------------------
 (use-package esup
   :disabled
+  :ensure t
   :config
   (setq esup-depth 0)) ; workaround bug on compiled files
 
@@ -238,8 +229,17 @@
 (unless (package-installed-p 'spacemacs-theme)
   (package-install 'spacemacs-theme))
 
+(unless (package-installed-p 'ef-themes)
+  (package-install 'ef-themes))
+
 (load-theme 'montmirail t)
 ;; use disable-theme to turn off
+
+;;(use-package ef-themes
+;;  :disabled
+;;  :ensure nil
+;;  :config
+;;  (ef-themes-load-theme 'ef-orange))
 
 ;;; ----------------------------------------------------------------------
 ;;; THE FONT
@@ -248,49 +248,50 @@
 ;; Frame properties. To display all: (prin1-to-string (frame-parameters))
 ;; List all fonts (print (font-family-list))
 ;; List all loaded faces: list-faces-display
+;; Show all attributes of a face (print (face-all-attributes 'default))
 ;;; ----------------------------------------------------------------------
 (when window-system
   (add-to-list 'default-frame-alist '(height . 60))
   (add-to-list 'default-frame-alist '(width . 90))
 
-  ;; Some free fonts:
-  ;;    Monospaced
-  ;;       cascadia code
-  ;;       source code pro
-  ;;       code new roman
-  ;;       roboto mono
-  ;;       jetbrains mono
-  ;;       ubuntu mono
-  ;;       mononoki
-  ;;    Variable width:
-  ;;       cantarell
+;; Some free fonts:
+;;    Monospaced
+;;       firacode
+;;       cascadia code
+;;       source code pro
+;;       code new roman
+;;       roboto mono
+;;       jetbrains mono
+;;       ubuntu mono
+;;       mononoki
+;;       iosevka
+;;    Variable width:
+;;       cantarell
 
-  (defconst cme-monospaced-font
-    (cond
-     ((find-font (font-spec :name "Cascadia Code")) "Cascadia Code")
-     ((find-font (font-spec :name "Source Code Pro")) "Source Code Pro")
-     ((find-font (font-spec :name "Consolas")) "Consolas")
-     ;; on debian
-     ((find-font (font-spec :name "DejaVu Sans Mono")) "DejaVu Sans Mono")
-     (t (progn (message "Cannot find a monospaced font") nil) )))
+(defconst cme-monospaced-font
+  (cond
+   ((find-font (font-spec :name "Cascadia Code")) "Cascadia Code")
+   ((find-font (font-spec :name "Source Code Pro")) "Source Code Pro")
+   ((find-font (font-spec :name "Fira Code")) "Fira Code")
+   ((find-font (font-spec :name "Consolas")) "Consolas")
+   ((find-font (font-spec :name "DejaVu Sans Mono")) "DejaVu Sans Mono")
+   (t (progn (message "Cannot find a monospaced font") nil) )))
 
-  (defconst cme-proportional-font
-    (cond
-     ((find-font (font-spec :name "Cantarell")) "Cantarell")
-     (t (progn (message "Cannot find a proportional font")
-               cme-monospaced-font) )))
+(when cme-monospaced-font
+  (set-face-attribute 'default nil :height 110 :font cme-monospaced-font)
+  ;; fixed pitch face
+  (set-face-attribute 'fixed-pitch nil :height 110 :font cme-monospaced-font) )
 
-  (when cme-monospaced-font
-    (set-face-attribute 'default nil :height 110 :font cme-monospaced-font)
-    ;; fixed pitch face
-    (set-face-attribute 'fixed-pitch nil :height 110 :font cme-monospaced-font) )
+(defconst cme-proportional-font
+  (cond
+   ((find-font (font-spec :name "Cantarell")) "Cantarell")
+   ((find-font (font-spec :name "Lucida Sans Unicode")) "Lucida Sans Unicode")
+   (t (progn (message "Cannot find a proportional font") cme-monospaced-font) )))
 
-  (when cme-proportional-font ;; is used in org mode setup
-    ;; variable pitch face
-    (set-face-attribute 'variable-pitch nil :height 130 :font cme-proportional-font :weight 'regular))
-)
+(when cme-proportional-font ;;  used in org mode setup
+  ;; variable pitch face
+  (set-face-attribute 'variable-pitch nil :height 130 :font cme-proportional-font)))
 
-;; (set-frame-font "Cascadia Code-11" nil t)
 
 ;;; ----------------------------------------------------------------------
 ;;; ENCODING and UNICODE - use UTF-8
@@ -326,10 +327,19 @@
      (mapcar (lambda (x) (format "%X" x))  decimal))))
 
 ;;; ----------------------------------------------------------------------
+;;; DELSEL
+;; Delete the selected text as sool as the user types something
+;;; ----------------------------------------------------------------------
+(use-package delsel
+  :ensure nil ; it is built-in
+  :hook (after-init . delete-selection-mode))
+
+;;; ----------------------------------------------------------------------
 ;;; MODELINE
 ;; https://github.com/TheBB/spaceline
 ;;; ----------------------------------------------------------------------
 (use-package spaceline
+  :ensure t
   ;;:disabled
   :defer 1
   :config
@@ -343,12 +353,14 @@
 ;;; RAINBOW DELIMITERS
 ;;; ----------------------------------------------------------------------
 (use-package rainbow-delimiters
+  :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
 ;;; ----------------------------------------------------------------------
 ;; RAINBOW Colorize color names in buffers
 ;;; ----------------------------------------------------------------------
 (use-package rainbow-mode
+  :ensure t
   :commands rainbow-mode)
 
 ;;; ----------------------------------------------------------------------
@@ -356,8 +368,8 @@
 ;; light to follow the cursor
 ;;; ----------------------------------------------------------------------
 (use-package beacon
-  ;;:disabled   ; bug variable is void: after-focus-change-function
-  :defer 3
+  :ensure t
+  :defer 5
   :diminish
   :config
   (setq beacon-size 80)
@@ -390,11 +402,21 @@
 (add-hook 'find-file-hook 'cme-find-big-file-hook)
 
 ;;; ----------------------------------------------------------------------
-;;; ISEARCH - fold characters of the same kind. Des/activate with M-s '
+;;; ISEARCH
 ;;; ----------------------------------------------------------------------
-;; ...in other words: ignore diacritics
-(when (>= emacs-major-version 25)
-  (setq search-default-mode #'char-fold-to-regexp))
+
+;; fold characters of the same kind... in other words: ignore diacritics
+;; Des/activate with M-s '
+(setq search-default-mode #'char-fold-to-regexp)
+
+;; Interpret the empty space as a regular expression that matches any
+;; character between the words
+(setq search-whitespace-regexp ".*?")
+
+;; Display a counter before the prompt
+(setq isearch-lazy-count t)
+(setq lazy-count-prefix-format "(%s/%s) ")
+(setq lazy-count-suffix-format nil)
 
 ;;; ----------------------------------------------------------------------
 ;;; ENABLE EDITION OF COMPRESSED FILES
@@ -405,30 +427,28 @@
 ;;; RECENT FILES
 ;;; ----------------------------------------------------------------------
 (use-package recentf
+  :ensure t
   :config
   ; speedup load time for remote files that are not accessible
   (setq recentf-keep '(file-remote-p file-readable-p))
   (setq recentf-max-saved-items 200)
-  (setq recentf-max-menu-items 60))
+  (setq recentf-max-menu-items 60)
+  (recentf-mode 1))
 
 ;;; ----------------------------------------------------------------------
 ;;; SAVE PLACE - remember last point in visited file
 ;;; ----------------------------------------------------------------------
 (use-package saveplace
+  :ensure t
   :config
   (setq save-place-file (locate-user-emacs-file "saveplace"))
   (save-place-mode 1))
 
 ;;; ----------------------------------------------------------------------
-;;; Save minibuffer history
-;;; ----------------------------------------------------------------------
-(setq history-length 20)
-(savehist-mode 1)
-
-;;; ----------------------------------------------------------------------
 ;;; UNIQUIFY - how buffer names are made unique
 ;;; ----------------------------------------------------------------------
 (use-package emacs
+  :ensure nil
   :config
   (setq uniquify-buffer-name-style 'post-forward)
   (setq uniquify-separator "|")
@@ -439,7 +459,8 @@
 ;;; MIDNIGHT - clean-buffer-list at midnight
 ;;; ----------------------------------------------------------------------
 (use-package midnight
-  :defer 3
+  :ensure t
+  :defer 5
   :config (midnight-mode 1)
   :custom
   ;; nb of days before a buffer becomes eligible for autokilling
@@ -449,7 +470,8 @@
 ;;; HYDRA
 ;; https://github.com/abo-abo/hydra
 ;;; ----------------------------------------------------------------------
-(use-package hydra)
+(use-package hydra
+  :ensure t)
 
 ;; Hydra for modes that toggle on and off
 (global-set-key
@@ -457,7 +479,7 @@
  (defhydra hydra-toggle (:color blue)
    "toggle"
    ("a" abbrev-mode "abbrev")
-   ("s" flyspell-mode "flyspell")
+   ;;("s" flyspell-mode "flyspell")
    ("d" toggle-debug-on-error "debug")
    ("f" auto-fill-mode "fill")
    ("n" global-linum-mode "line number")
@@ -469,6 +491,7 @@
 ;;; WINNER-MODE - navigate in window config with C-c right/left
 ;;; ----------------------------------------------------------------------
 (use-package winner
+  :ensure nil
   :defer 1
   :config (winner-mode 1))
 
@@ -476,7 +499,8 @@
 ;;; WINDMOVE - navigate buffers with S-arrow
 ;;; ----------------------------------------------------------------------
 (use-package windmove
-  :defer 1
+  :ensure nil
+  :defer 5
   :config
   (windmove-default-keybindings))
 
@@ -529,93 +553,131 @@
 ;;  ^: open parent folder
 ;;; ----------------------------------------------------------------------
 (use-package dired
-  :ensure nil ; do not install because it does not exist
+  :ensure nil
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
-  :init
+  :config
   (when win32-p
     ;; options for the ls emulation on windows
     (setq ls-lisp-dirs-first t)
-    (setq ls-lisp-format-time-list '("%Y-%m-%d %H:%M" "%Y-%m-%d %H:%M"))))
-
-;;(use-package all-the-icons-dired
-;;  :hook (dired-mode . all-the-icons-dired-mode))
-
-;; visits the selected directory in the current buffer
-(use-package dired-single
-  :commands (dired dired-jump)
-  :bind (:map dired-mode-map
-              ([remap dired-find-file] . 'dired-single-buffer)
-              ([remap dired-up-directory] . 'dired-single-up-directory)
-              ([remap dired-mouse-find-file-other-window] . 'dired-single-buffer-mouse) ))
+    (setq ls-lisp-format-time-list '("%Y-%m-%d %H:%M" "%Y-%m-%d %H:%M")))
+  (setq dired-recursive-copies 'always)
+  (setq dired-recursive-deletes 'always)
+  (setq dired-dwim-target t) )
 
 ;;; ----------------------------------------------------------------------
 ;;; HUNGRY DELETE
 ;;; ----------------------------------------------------------------------
 (use-package hungry-delete
+  :ensure t
   :defer 1
   :diminish hungry-delete-mode
   :config (global-hungry-delete-mode))
 
 ;;; ----------------------------------------------------------------------
-;;; SWIPER: IVY:completion & COUNSEL:command completion & SWIPER:isearch
-;; https://github.com/abo-abo/swiper
-;; M-j extend the minibuffer input with the next word
-;; M-r toggle regexp
-;; C-M-j select current input
-;; C-j ou / complete directory
-;; C-c C-o ivy-occur  save the completion session to a buffer
+;;; THE MINIBUFFER
 ;;; ----------------------------------------------------------------------
-(use-package counsel
-  :diminish
-  :bind (:map minibuffer-local-map
-              ("C-r" . 'counsel-minibuffer-history))
+;; Save history
+(setq history-length 20)
+(savehist-mode 1)
+
+;; Vertical layout for the minibuffer
+;; https://github.com/minad/vertico/wiki
+(use-package vertico
+  :ensure t
   :config
-  (counsel-mode 1))
-  ;;("<f1> f" . counsel-describe-function)
-  ;;("<f1> v" . counsel-describe-variable)
-  ;;("<f1> l" . counsel-find-library)
-  ;;("<f2> i" . counsel-info-lookup-symbol)
-  ;;("<f2> u" . counsel-unicode-char)
-  ;;("C-c g" . counsel-git)
-  ;;("C-c j" . counsel-git-grep)
-  ;;("C-c k" . counsel-ag)
-  ;;("C-x l" . counsel-locate)
+  (setq vertico-cycle t)
+  (setq vertico-resize nil)
+  (vertico-mode 1))
 
-(use-package swiper
-  :bind (("C-s" . swiper)
-         ("C-c C-s" . isearch-forward)
-         ("C-c C-r" . ivy-resume)
-         ("<f6>" . ivy-resume) ))
-
-;; M-j ivy-yank-word
-;; C-M-n run and next
-(use-package ivy
-  :diminish ivy-mode
+;; Show more info in the minibuffer
+;; https://github.com/minad/marginalia
+(use-package marginalia
+  :ensure t
   :config
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-use-selectable-prompt t) ;; C-p to select the candidate line
-  ;;(setq enable-recursive-minibuffers t)
-  (ivy-mode 1))
+  (marginalia-mode 1))
 
-(use-package ivy-rich
-  :after ivy
+;; Better completion algorithm
+;; https://github.com/oantolin/orderless
+(use-package orderless
+  :ensure t
+  :config
+  (setq completion-styles '(orderless basic))
+  (setq completion-category-overrides '((file (styles partial-completion)))))
+
+;; Search and navigation
+;; https://github.com/minad/consult#use-package-example
+(use-package consult
+  :ensure t
+  :bind (;; C-c bindings in `mode-specific-map'
+         ("C-c M-x" . consult-mode-command)
+         ("C-c h" . consult-history)
+         ("C-c k" . consult-kmacro)
+         ("C-c m" . consult-man)
+         ("C-c i" . consult-info)
+         ([remap Info-search] . consult-info)
+         ;; C-x bindings in `ctl-x-map'
+         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+         ;; Custom M-# bindings for fast register access
+         ("M-#" . consult-register-load)
+         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+         ("C-M-#" . consult-register)
+         ;; Other custom bindings
+         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+         ;; M-g bindings in `goto-map'
+         ("M-g e" . consult-compile-error)
+         ("M-g r" . consult-grep-match)
+         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+         ("M-g g" . consult-goto-line)             ;; orig. goto-line
+         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+         ("M-g m" . consult-mark)
+         ("M-g k" . consult-global-mark)
+         ("M-g i" . consult-imenu)
+         ("M-g I" . consult-imenu-multi)
+         ;; M-s bindings in `search-map'
+         ("M-s d" . consult-find)                  ;; Alternative: consult-fd
+         ("M-s c" . consult-locate)
+         ("M-s g" . consult-grep)
+         ("M-s G" . consult-git-grep)
+         ("M-s r" . consult-ripgrep)
+         ("M-s l" . consult-line)
+         ("M-s L" . consult-line-multi)
+         ("M-s k" . consult-keep-lines)
+         ("M-s u" . consult-focus-lines)
+         ;; Isearch integration
+         ("M-s e" . consult-isearch-history)
+         :map isearch-mode-map
+         ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+         ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+         ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
+         ;; Minibuffer history
+         :map minibuffer-local-map
+         ("M-s" . consult-history)                 ;; orig. next-matching-history-element
+         ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+  )
+
+;; minibuffer actions
+;; https://github.com/oantolin/embark
+;; https://karthinks.com/software/fifteen-ways-to-use-embark/
+;; embark-act
+(use-package embark
+  :ensure t
+  :bind (("C-." . embark-act)         ;; pick some comfortable binding
+         ("C-;" . embark-dwim)        ;; good alternative: M-.
+         ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
   :init
-  (ivy-rich-mode 1))
+  (setq prefix-help-command #'embark-prefix-help-command))
 
-;;; ----------------------------------------------------------------------
-;;; SMEX
-;; sort commands by frequency
-;;; ----------------------------------------------------------------------
-(use-package smex
-  :config (smex-initialize))
-
-;;; ----------------------------------------------------------------------
-;;; AVY - Jump to visible char
-;; https://github.com/abo-abo/avy
-;;; ----------------------------------------------------------------------
-;;(use-package avy
-;;  :bind ("M-s" . avy-goto-char))
+;; glue embark and consult
+(use-package embark-consult
+  :ensure t)
 
 ;;; ----------------------------------------------------------------------
 ;;; GREP
@@ -645,6 +707,7 @@
 ;; https://github.com/mhayashi1120/Emacs-wgrep
 ;;; ----------------------------------------------------------------------
 (use-package wgrep
+  :ensure t
   :commands (wgrep-change-to-wgrep-mode))
 
 ;; Refactorings
@@ -662,6 +725,7 @@
 ;; https://github.com/ggreer/the_silver_searcher
 ;;; ----------------------------------------------------------------------
 (use-package ag
+  :ensure t
   :commands (ag))
 
 ;; (use-package wgrep-ag
@@ -671,6 +735,7 @@
 ;;; WHICH-KEY shows the keybindings of entered commads
 ;;; ----------------------------------------------------------------------
 (use-package which-key
+  :ensure t
   :defer 1
   :diminish which-key-mode
   :config (which-key-mode))
@@ -680,6 +745,7 @@
 ;; https://gitlab.com/tsc25/undo-tree
 ;;; ----------------------------------------------------------------------
 (use-package undo-tree
+  :ensure t
   :diminish undo-tree-mode
   :commands (undo-tree-visualize)
   :config
@@ -693,6 +759,7 @@
 ;;; EDIFF DIFF MODE
 ;;; ----------------------------------------------------------------------
 (use-package diff-mode
+  :ensure t
   :config
   (setq ediff-diff-options "-w")
   ;; do not spawn a new frame for the ediff control window
@@ -708,6 +775,7 @@
 ;;; smerge-ediff command prefix is C-c ^
 ;;; ----------------------------------------------------------------------
 (use-package smerge-mode
+  :ensure t
   :commands smerge-mode
   :init
   ;;(setq smerge-command-prefix (kbd "C-c s"))
@@ -777,7 +845,8 @@ _k_: down      _a_: all           _q_: quit
 ;;; TRAMP
 ;;; ----------------------------------------------------------------------
 (use-package tramp
-  :defer 3
+  :ensure nil
+  :defer t
   :config
   (setq tramp-verbose 6)
   ;;(setq tramp-verbose 10)
@@ -802,6 +871,7 @@ _k_: down      _a_: all           _q_: quit
 ;;; ----------------------------------------------------------------------
 ;; https://magit.vc
 (use-package magit
+  :ensure t
   :pin melpa
   :bind (("C-x g" . magit-status)
          ;;("C-x M-g" . magit-dispatch); C-c M-g: magit-file-dispatch
@@ -813,6 +883,7 @@ _k_: down      _a_: all           _q_: quit
 
 ;; https://gitlab.com/pidu/git-timemachine
 (use-package git-timemachine
+  :ensure t
   :bind (("s-g" . git-timemachine)))
 
 ;; git-gutter? blamer?
@@ -828,6 +899,7 @@ _k_: down      _a_: all           _q_: quit
 ;; regenerate tags: s-p R    search: s-p j  see projectile-tags-command
 ;;; ----------------------------------------------------------------------
 (use-package projectile
+  :ensure t
   :pin melpa-stable
   :bind-keymap
   (("s-p" . projectile-command-map)
@@ -864,30 +936,34 @@ _k_: down      _a_: all           _q_: quit
         ))
 
 ;;; ----------------------------------------------------------------------
-;;; COMPANY - complete anything
-;; http://company-mode.github.io/
+;;; COMPLETIONS
 ;;; ----------------------------------------------------------------------
-(use-package company
-  :diminish company-mode
+(setq tab-always-indent 'complete) ; tab to do completion
+
+;; CORFU: in buffer completion popup
+;; https://github.com/minad/corfu
+(use-package corfu
+  :ensure t
+  :hook
+  (prog-mode . (lambda () (setq-local corfu-auto t)))
   :config
-  ;; rewrite the backends to not use clang and cmake (which we do not use)
-  (setq company-backends '((company-capf company-files company-keywords company-dabbrev-code company-etags company-dabbrev)))
+  (setq corfu-min-width 30)
 
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 3)
-  (setq tab-always-indent 'complete)
+  (setq corfu-popupinfo-delay '(1.25 . 0.5))
+  (corfu-popupinfo-mode 1) ; show documentation
 
-  ;; do not downcase the returned canditates
-  (setq company-dabbrev-downcase nil)
+  (global-corfu-mode 1))
 
-  (global-company-mode 1)
+;; see prot !!!
 
-  :bind (:map company-mode-map
-              ;; since emacs24 the standard is completion-at-point C-M-i
-              ;; but I prefer company
-              ([remap completion-at-point] . 'company-complete)
-              ([remap indent-for-tab-command] . 'company-indent-or-complete-common)
-              ))
+;; CAPE: more capfs
+;; https://github.com/minad/cape
+(use-package cape
+  :ensure t
+  :after corfu
+  :config
+  (setq completion-at-point-functions '(cape-dabbrev cape-file))
+  )
 
 ;;; ----------------------------------------------------------------------
 ;;; FLYCHECK
@@ -895,6 +971,7 @@ _k_: down      _a_: all           _q_: quit
 ;; C-c !
 ;;; ----------------------------------------------------------------------
 (use-package flycheck
+  :ensure t
   :commands flycheck-mode
   :config
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
@@ -907,6 +984,7 @@ _k_: down      _a_: all           _q_: quit
 ;; lsp-workspace-restart : in case of problem, restart server
 ;;; ----------------------------------------------------------------------
 (use-package lsp-mode
+  :ensure t
   :commands (lsp lsp-deferred)
   :init
   (setq lsp-keymap-prefix "C-c l") ; or s-L. On windoz, s-l locks the screen
@@ -919,6 +997,7 @@ _k_: down      _a_: all           _q_: quit
 
 ;;
 (use-package lsp-ui
+  :ensure t
   :after lsp
   :bind (:map lsp-ui-mode-map
               ;; rebind M-. and M-? as suggested in the doc
@@ -935,14 +1014,17 @@ _k_: down      _a_: all           _q_: quit
 
 
 (use-package treemacs
+  :ensure t
   :after lsp)
 
 (use-package lsp-treemacs
+  :ensure t
   :commands
   (lsp-treemacs-errors-list ;; this is broken on windows
    lsp-treemacs-symbols))
 
 (use-package lsp-ivy
+  :ensure t
   :commands lsp-ivy-workspace-symbol)
 
 ;;; DAP-MODE : debug adapter protocol
@@ -957,6 +1039,7 @@ _k_: down      _a_: all           _q_: quit
 ;;    dap-hydra
 ;;    dap-ui-repl
 (use-package dap-mode
+  :ensure t
   :disabled
   :commands (dap-debug dap-hydra)
   :bind (:map lsp-mode-map
@@ -1008,12 +1091,14 @@ _k_: down      _a_: all           _q_: quit
 ;; http://joaotavora.github.io/yasnippet/
 ;;; ----------------------------------------------------------------------
 (use-package yasnippet
+  :ensure t
   :diminish yas-minor-mode
   :hook
   ;; has no effect because the scratch buffer is in prog mode
   (prog-mode . yas-minor-mode) )
 
 (use-package yasnippet-snippets
+  :ensure t
   :after (yasnippet) )
 
 ;; we can also activate it for some modes only. eg:
@@ -1030,7 +1115,7 @@ _k_: down      _a_: all           _q_: quit
 (load "setup-json.el")
 (load "setup-javascript.el")
 (load "setup-lisp.el")
-(load "setup-clojure.el")
+;;(load "setup-clojure.el")
 ;;(load "setup-haskell.el")
 ;;(load "setup-python.el")
 
@@ -1040,9 +1125,12 @@ _k_: down      _a_: all           _q_: quit
 ;;; ----------------------------------------------------------------------
 ;;; START SERVER
 ;;; ----------------------------------------------------------------------
-(require 'server)
-(unless (server-running-p)
-  (server-start))
+(use-package server
+  :ensure nil
+  :defer 1
+  :config
+  (unless (server-running-p)
+    (server-start)))
 
 ;;; ----------------------------------------------------------------------
 ;;; TIE SOME FILE EXTENSIONS TO MODES

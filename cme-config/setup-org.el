@@ -45,6 +45,7 @@
 
 
 (use-package org
+    :ensure t
     :bind (("C-c l" . org-store-link)
            ("C-c a" . org-agenda))
 
@@ -69,6 +70,7 @@
 
 
 (use-package org-bullets
+  :ensure t
   :after org
   :hook (org-mode . org-bullets-mode)
   ;;:custom   (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))

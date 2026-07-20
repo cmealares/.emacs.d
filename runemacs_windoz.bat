@@ -1,6 +1,8 @@
 @echo off
 
-set EMACSROOT=C:\Program Files\emacs-27.2-x86_64
+REM set EMACSROOT=C:\Program Files\emacs-27.2-x86_64
+set EMACSROOT=C:\Program Files\emacs-30.2
+
 
 echo Init file will be searched in %HOME%
 echo Emacs is installed in %EMACSROOT%

@@ -4,6 +4,7 @@
 ;;; -----------------------------------------------------------------------
 
 (use-package clojure-mode
+  :ensure t
   ;;;:disabled
   :pin melpa
   :mode (("\\.edn$" . clojure-mode)
@@ -12,6 +13,7 @@
 
 ;; extra syntax highlighting for clojure
 (use-package clojure-mode-extra-font-locking
+  :ensure t
   :disabled
   :after clojure-mode)
 
@@ -22,6 +24,7 @@
 ;;; https://docs.cider.mx/
 ;;; -----------------------------------------------------------------------
 (use-package cider
+  :ensure t
   ;;:disabled
   :pin melpa
 
@@ -41,6 +44,7 @@
 ;; tagedit fait la meme chose pour html
 
 (use-package paredit
+  :ensure t
   :diminish
   :hook ((clojure-mode . enable-paredit-mode)
          (cider-repl-mode . enable-paredit-mode)))

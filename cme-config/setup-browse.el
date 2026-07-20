@@ -37,6 +37,7 @@
 ;;; WEBJUMP
 ;;; -----------------------------------------------------------------------
 (use-package webjump
+  :ensure t
   :bind ("C-x w" . webjump)
   :commands webjump
   :config

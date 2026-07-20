@@ -118,22 +118,6 @@
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
-;; useless since we can use
-;; C-x C-q : read-only-mode : toggle read only on the buffer
-;;
-(defun cme-hijack ()
-  "Hijack current file: make it writable"
-  (interactive)
-  (let* ((filename (buffer-file-name))
-         (curmodes  (file-modes filename)))
-    (set-file-modes filename
-                    (logior (string-to-number "0222" 8) ; ugo+w
-                            curmodes))
-    (read-only-mode nil)
-    (message "File mode was: %o New mode: %o"
-             curmodes
-             (file-modes filename))))
-
 (defun cme-revert-all-buffers ()
   "Refreshes all open buffers from their respective files"
   (interactive)

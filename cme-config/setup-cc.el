@@ -105,10 +105,12 @@
 
 ;; company backend for c/c++
 ;; (use-package company-irony
+;;   :ensure t
 ;;   :config
 ;;   (add-to-list 'company-backends 'company-irony))
 
 ;; (use-package irony
+;; :ensure t
 ;;   :config
 ;;   (add-hook 'c++-mode-hook 'irony-mode)
 ;;   (add-hook 'c-mode-hook 'irony-mode)

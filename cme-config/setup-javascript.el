@@ -15,6 +15,7 @@
 ;;; https://web-mode.org/
 ;;; -----------------------------------------------------------------------
 (use-package web-mode
+  :ensure t
   :config
   (setq web-mode-markup-indent-offset 4)
   (setq web-mode-css-indent-offset 4)
@@ -40,6 +41,7 @@
 ;;; C-j
 ;;; -----------------------------------------------------------------------
 (use-package emmet-mode
+  :ensure t
   :disabled
   ;; :config
   ;;(add-hook 'web-mode-hook 'emmet-mode)  ;; autostart on any markup modes
@@ -50,6 +52,7 @@
 ;;; NOT USED
 ;;; -----------------------------------------------------------------------
 (use-package js2-mode
+  :ensure t
   :disabled
   :mode "\\.js$"
   :hook (js2-mode . lsp-deferred)
@@ -57,6 +60,7 @@
   (setq js-indent-level 2))
 
 (use-package typescript-mode
+  :ensure t
   :disabled
   :mode "\\.ts$"
   :hook (typescript-mode . lsp-deferred)
