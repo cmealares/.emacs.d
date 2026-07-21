@@ -14,6 +14,8 @@
 ;; C-<SPC> C-<SPC>      set mark
 ;; C-u C-<SPC>          pop mark: in same buffer
 ;; C-x C-<SPC>          pop global mark: can be in other buffer
+;; C-x r <SPC>          store mark into register; j to jump
+;; C-x r m              set bookmark; b to jump
 ;;
 ;;; -- Repeat command
 ;; C-x z z z z          repeat
@@ -198,8 +200,8 @@
   :demand t
   :ensure nil
   :init
-  (setq use-package-verbose t) ;; helps profile package loading
-  )
+  ;; helps profile package loading
+  (setq use-package-verbose t))
 
 (use-package diminish
   :ensure t)
@@ -610,6 +612,9 @@
 ;; https://github.com/minad/consult#use-package-example
 (use-package consult
   :ensure t
+  :config
+  ;; delay preview because it is slow when modes are not yet initialized
+  (setq consult-preview-key (list :debounce 0.4 'any))
   :bind (;; C-c bindings in `mode-specific-map'
          ("C-c M-x" . consult-mode-command)
          ("C-c h" . consult-history)
@@ -627,7 +632,8 @@
          ;; Custom M-# bindings for fast register access
          ("M-#" . consult-register-load)
          ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-         ("C-M-#" . consult-register)
+         ;;("C-x M-#" . consult-register)
+         ("C-x r j" . consult-register)
          ;; Other custom bindings
          ("M-y" . consult-yank-pop)                ;; orig. yank-pop
          ;; M-g bindings in `goto-map'
@@ -760,7 +766,7 @@
 ;;; EDIFF DIFF MODE
 ;;; ----------------------------------------------------------------------
 (use-package diff-mode
-  :ensure t
+  :ensure nil
   :config
   (setq ediff-diff-options "-w")
   ;; do not spawn a new frame for the ediff control window
@@ -768,8 +774,7 @@
   ;; use a vertical layout
   (setq ediff-split-window-function 'split-window-horizontally)
   ;; show ancestor
-  (setq ediff-merge-revisions-with-ancestor t)
-  )
+  (setq ediff-merge-revisions-with-ancestor t))
 
 ;;; ----------------------------------------------------------------------
 ;;; SMERGE
@@ -812,35 +817,35 @@ _k_: down      _a_: all           _q_: quit
 ;;; SHELL MODE
 ;; http://www.cygwin.com/faq/faq-nochunks.html#faq.using.ntemacs
 ;;; ----------------------------------------------------------------------
-(when win32-p
-  (setq exec-path (cons "C:/cygwin/bin" exec-path))
-  (setenv "PATH" (concat "C:\\cygwin\\bin;" (getenv "PATH")))
-
-  ;;   LOGNAME and USER are expected in many Emacs packages
-  ;;   Check these environment variables.
-
-  (if (and (null (getenv "USER"))
-           ;; Windows includes variable USERNAME, which is copied to
-           ;; LOGNAME and USER respectively.
-           (getenv "USERNAME"))
-      (setenv "USER" (getenv "USERNAME")))
-
-  (if (and (getenv "LOGNAME")
-           ;;  Bash shell defines only LOGNAME
-           (null (getenv "USER")))
-      (setenv "USER" (getenv "LOGNAME")))
-
-  (if (and (getenv "USER")
-           (null (getenv "LOGNAME")))
-      (setenv "LOGNAME" (getenv "USER")))
-
-  (setq shell-file-name "bash")
-  (setenv "SHELL" shell-file-name)
-  (setq explicit-shell-file-name shell-file-name)
-
-  ;; Remove C-m (^M) characters that appear in output
-  (add-hook 'comint-output-filter-functions
-            'comint-strip-ctrl-m) )
+;;(when win32-p
+;;  (setq exec-path (cons "C:/cygwin/bin" exec-path))
+;;  (setenv "PATH" (concat "C:\\cygwin\\bin;" (getenv "PATH")))
+;;
+;;  ;;   LOGNAME and USER are expected in many Emacs packages
+;;  ;;   Check these environment variables.
+;;
+;;  (if (and (null (getenv "USER"))
+;;           ;; Windows includes variable USERNAME, which is copied to
+;;           ;; LOGNAME and USER respectively.
+;;           (getenv "USERNAME"))
+;;      (setenv "USER" (getenv "USERNAME")))
+;;
+;;  (if (and (getenv "LOGNAME")
+;;           ;;  Bash shell defines only LOGNAME
+;;           (null (getenv "USER")))
+;;      (setenv "USER" (getenv "LOGNAME")))
+;;
+;;  (if (and (getenv "USER")
+;;           (null (getenv "LOGNAME")))
+;;      (setenv "LOGNAME" (getenv "USER")))
+;;
+;;  (setq shell-file-name "bash")
+;;  (setenv "SHELL" shell-file-name)
+;;  (setq explicit-shell-file-name shell-file-name)
+;;
+;;  ;; Remove C-m (^M) characters that appear in output
+;;  (add-hook 'comint-output-filter-functions
+;;            'comint-strip-ctrl-m) )
 
 ;;; ----------------------------------------------------------------------
 ;;; TRAMP
@@ -955,16 +960,13 @@ _k_: down      _a_: all           _q_: quit
 
   (global-corfu-mode 1))
 
-;; see prot !!!
-
 ;; CAPE: more capfs
 ;; https://github.com/minad/cape
 (use-package cape
   :ensure t
   :after corfu
   :config
-  (setq completion-at-point-functions '(cape-dabbrev cape-file))
-  )
+  (setq completion-at-point-functions '(cape-dabbrev cape-file)))
 
 ;;; ----------------------------------------------------------------------
 ;;; FLYCHECK

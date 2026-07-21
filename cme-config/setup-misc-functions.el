@@ -148,18 +148,6 @@
   (message "I have re-formatted"))
 
 ;;; -----------------------------------------------------------------------
-;;;; Find occurences of some keywords in a file
-;;; You can quickly browse files by using this command in conjunction with
-;;; mydired script and virtual-dired
-;;; -----------------------------------------------------------------------
-(defalias 'fo    'cme-occur-keywords)
-
-(defun cme-occur-keywords ()
-  (interactive)
-  (occur "choices\\|problem" 5)
-  (other-window 1))
-
-;;; -----------------------------------------------------------------------
 ;;;; Increment number
 ;;; -----------------------------------------------------------------------
 (defun cme-add-number (arg)
