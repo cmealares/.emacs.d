@@ -103,7 +103,7 @@
 (when (fboundp 'mouse-wheel-mode) (mouse-wheel-mode 1))
 
 ;; default width for fill-paragraph
-(custom-set-variables '(fill-column 90))
+(setq fill-column 90)
 
 ;; enable upcase & down case region
 (put 'upcase-region   'disabled nil)
@@ -182,7 +182,6 @@
 ;; https://github.com/jwiegley/use-package
 ;;     :init code to run before a package is loaded. Keep minimal!
 ;;     :config code to run after a package is loaded
-;;     :custom customized variables
 ;;; ----------------------------------------------------------------------
 (require 'package)
 (package-initialize)
@@ -238,7 +237,6 @@
 ;; use disable-theme to turn off
 
 ;;(use-package ef-themes
-;;  :disabled
 ;;  :ensure nil
 ;;  :config
 ;;  (ef-themes-load-theme 'ef-orange))
@@ -464,10 +462,10 @@
 (use-package midnight
   :ensure t
   :defer 5
-  :config (midnight-mode 1)
-  :custom
+  :init
   ;; nb of days before a buffer becomes eligible for autokilling
-  (clean-buffer-list-delay-general 3))
+  (setq clean-buffer-list-delay-general 3)
+  :config (midnight-mode 1))
 
 ;;; ----------------------------------------------------------------------
 ;;; HYDRA
@@ -670,7 +668,7 @@
          ("M-r" . consult-history))                ;; orig. previous-matching-history-element
   )
 
-;; minibuffer actions
+;; Minibuffer actions. Think right-click
 ;; https://github.com/oantolin/embark
 ;; https://karthinks.com/software/fifteen-ways-to-use-embark/
 ;; embark-act

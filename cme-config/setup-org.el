@@ -1,10 +1,6 @@
 ;;; -----------------------------------------------------------------------
 ;;; ORG MODE
 ;;; -----------------------------------------------------------------------
-(defun cme-org-mode-setup ()
-  ;;(variable-pitch-mode 1)
-  (visual-line-mode 1)
-  (auto-fill-mode 1) )
 
 (defun cme-org-font-setup ()
   (dolist (face '((org-level-1 . 1.3)
@@ -27,7 +23,6 @@
   (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
 
 (defun cme-org-todo-setup ()
-  (setq org-log-done 'time)
   (setq org-use-fast-todo-selection t)
 
   ;; gtd
@@ -43,37 +38,44 @@
           ("BLOCKED" . (:foreground "orange" :weight bold)))) )
 
 
-
 (use-package org
-    :ensure t
-    :bind (("C-c l" . org-store-link)
-           ("C-c a" . org-agenda))
+  :ensure t
+  :bind
+  (("C-c l" . org-store-link)
+   ("C-c a" . org-agenda))
 
-    :hook (org-mode . cme-org-mode-setup)
+  :config
+  ;;(variable-pitch-mode 1)
+  (visual-line-mode 1)
+  (auto-fill-mode 1)
 
-    :custom
-    ;; org-mode: Don't ruin S-arrow to switch windows
-    ;; use M-+ and M-- instead
-    (org-replace-disputed-keys t)
+  ;; Don't ruin S-arrow to switch windows. Use M-+ and M-- instead
+  (setq org-replace-disputed-keys t)
 
-    :config
-    (cme-org-font-setup)
-    (cme-org-todo-setup)
+  ;;(setq org-hide-leading-stars t)
+  (setq org-startup-folded t)
+  (setq org-ellipsis " ▾")
+  (setq org-hide-emphasis-markers t)
 
-    ;;(setq org-hide-leading-stars t)
-    ;;(setq org-odd-levels-only t)
-    (setq org-startup-folded t)
-    (setq org-ellipsis " ▾")
-    (setq org-hide-emphasis-markers t)
-    ;;(setq org-clock-into-drawer "LOGBOOK")
+  ;; insert new headings after content
+  (setq org-insert-heading-respect-content t)
+
+  (setq org-log-done 'time)
+  (setq org-clock-into-drawer t)
+
+  (when win32-p
+    (setq org-directory "~/OneDrive - SAP SE/cme_backups/projets/")
     )
+  (setq org-agenda-files (list org-directory))
 
+  (cme-org-font-setup)
+  (cme-org-todo-setup))
 
 (use-package org-bullets
   :ensure t
   :after org
   :hook (org-mode . org-bullets-mode)
-  ;;:custom   (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))
+  ;;   (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))
   )
 
 
