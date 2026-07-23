@@ -11,10 +11,10 @@
                   (org-level-6 . 1.1)
                   (org-level-7 . 1.1)
                   (org-level-8 . 1)))
-    (set-face-attribute (car face) nil :font cme-proportional-font :weight 'regular :height (cdr face)))
+    (set-face-attribute (car face) nil :height (cdr face)))
 
   ;; Set other faces to use fixed pitch
-  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
   (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
@@ -44,17 +44,21 @@
   (("C-c l" . org-store-link)
    ("C-c a" . org-agenda))
 
-  :config
-  ;;(variable-pitch-mode 1)
-  (visual-line-mode 1)
-  (auto-fill-mode 1)
+  :hook
+  (org-mode
+   . (lambda ()
+       (variable-pitch-mode 1)
+       (visual-line-mode 1)
+       (auto-fill-mode 1)))
 
+  :config
   ;; Don't ruin S-arrow to switch windows. Use M-+ and M-- instead
   (setq org-replace-disputed-keys t)
 
   ;;(setq org-hide-leading-stars t)
   (setq org-startup-folded t)
   (setq org-ellipsis " ▾")
+  ;; hide *, / etc
   (setq org-hide-emphasis-markers t)
 
   ;; insert new headings after content
