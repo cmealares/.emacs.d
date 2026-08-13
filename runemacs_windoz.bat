@@ -1,6 +1,5 @@
 @echo off
 
-REM set EMACSROOT=C:\Program Files\emacs-27.2-x86_64
 set EMACSROOT=C:\Program Files\emacs-30.2
 
 
@@ -22,4 +21,4 @@ REM --debug-init
 REM Start emacs client
 REM -c create a new frame
 REM -a if daemon not running, then run this instead
-REM "%EMACSROOT%\bin\emacsclientw.exe" -c  -a ""
+REM "%EMACSROOT%\bin\emacsclientw.exe" -q -c  -a ""

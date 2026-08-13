@@ -278,15 +278,16 @@
    (t (progn (message "Cannot find a monospaced font") nil) )))
 
 (when cme-monospaced-font
-  ;; default must have a fixed height, the others must be relative (float)
+  ;; default font must have a fixed height
+  ;; others fonts must be relative (float)
   (set-face-attribute 'default nil :height 120 :font cme-monospaced-font)
   ;; fixed pitch face
   (set-face-attribute 'fixed-pitch nil :height 1.0 :font cme-monospaced-font) )
 
 (defconst cme-proportional-font
   (cond
-   ((find-font (font-spec :name "Cantarell")) "Cantarell")
-   ((find-font (font-spec :name "Lucida Sans Unicode")) "Lucida Sans Unicode")
+   ;; bad stars in org mode ((find-font (font-spec :name "Cantarell")) "Cantarell")
+   ;; idem ((find-font (font-spec :name "Lucida Sans Unicode")) "Lucida Sans Unicode")
    (t (progn (message "Cannot find a proportional font") cme-monospaced-font) )))
 
 (when cme-proportional-font ;;  used in org mode setup
@@ -329,7 +330,7 @@
 
 ;;; ----------------------------------------------------------------------
 ;;; DELSEL
-;; Delete the selected text as sool as the user types something
+;; Delete the selected text as soon as the user types something
 ;;; ----------------------------------------------------------------------
 (use-package delsel
   :ensure nil ; it is built-in
@@ -566,6 +567,19 @@
   (setq dired-recursive-deletes 'always)
   (setq dired-dwim-target t) )
 
+;; from Prot
+(use-package dired-subtree
+  :ensure t
+  :after dired
+  :bind
+  ( :map dired-mode-map
+    ("<tab>" . dired-subtree-toggle)
+    ("TAB" . dired-subtree-toggle)
+    ("<backtab>" . dired-subtree-remove)
+    ("S-TAB" . dired-subtree-remove))
+  :config
+  (setq dired-subtree-use-backgrounds nil))
+
 ;;; ----------------------------------------------------------------------
 ;;; HUNGRY DELETE
 ;;; ----------------------------------------------------------------------
@@ -626,7 +640,7 @@
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
          ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+         ;; cmea bad key("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
          ;; Custom M-# bindings for fast register access
          ("M-#" . consult-register-load)
          ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
