@@ -66,20 +66,8 @@
 ;;; Code:
 
 ;;; ----------------------------------------------------------------------
-;;; Make startup faster by reducing the frequency of garbage collection
-;;; The default is 800 kilobytes
-;;; ----------------------------------------------------------------------
-(setq gc-cons-threshold (* 50 1000 1000))
-
-;;; ----------------------------------------------------------------------
 ;;; BETTER DEFAULTS
 ;;; ----------------------------------------------------------------------
-;; no splash screen
-(setq inhibit-startup-message t)
-
-;; get rid of yes or no questions
-(fset 'yes-or-no-p 'y-or-n-p)
-
 ;; move by logical line, not by screen line
 (setq line-move-visual nil)
 
@@ -96,9 +84,6 @@
 
 ;; do not use shift to select text
 (setq shift-select-mode nil)
-
-;; flash instead of alarm bell
-(setq visible-bell t)
 
 (when (fboundp 'mouse-wheel-mode) (mouse-wheel-mode 1))
 
@@ -132,10 +117,14 @@
 ;; use ligatures when possible
 (global-prettify-symbols-mode 1)
 
-(when window-system
-  (setq frame-title-format '(buffer-file-name "%f" ("%b")))
-  (set-fringe-mode 10)
-  (blink-cursor-mode 0))
+;; blink cursor
+(blink-cursor-mode 0)
+
+;;; ----------------------------------------------------------------------
+;;; What's the system
+;;; ----------------------------------------------------------------------
+(defconst win32-p (eq system-type 'windows-nt) "Are we running on Windoze?")
+(defconst linux-p (or (eq system-type 'gnu/linux) (eq system-type 'linux)) "Are we running on GNU/Linux?")
 
 ;;; ----------------------------------------------------------------------
 ;;; LOAD PATH
@@ -145,18 +134,6 @@
 
 ;; additional modules are installed here
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
-
-;;; ----------------------------------------------------------------------
-;;; SYSTEM DEFAULTS
-;;; ----------------------------------------------------------------------
-(defconst win32-p (eq system-type 'windows-nt) "Are we running on Windoze?")
-(defconst linux-p (or (eq system-type 'gnu/linux) (eq system-type 'linux)) "Are we running on GNU/Linux?")
-
-;; Load settings that are needed early
-;; eg: http proxies, system paths
-(let ((initos (locate-user-emacs-file "init-system.el")))
-  (when (file-exists-p initos)
-    (load initos)))
 
 ;;; ----------------------------------------------------------------------
 ;;; CUSTOMIZE - save in a dedicated file
@@ -1213,8 +1190,3 @@ _k_: down      _a_: all           _q_: quit
 (defalias 'eb    'ediff-buffers)
 
 (defalias 'ffap  'find-file-at-point)
-
-;;; ----------------------------------------------------------------------
-;;; Make gc pauses faster by decreasing the threshold.
-;;; ----------------------------------------------------------------------
-(setq gc-cons-threshold (* 2 1000 1000))
