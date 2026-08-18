@@ -1,3 +1,5 @@
+;;; -*- lexical-binding: t -*-
+
 ;;; -----------------------------------------------------------------------
 ;;; GGTAGS : a frontend to GNU GLOBAL
 ;;; http://www.gnu.org/software/global : needs to be on path

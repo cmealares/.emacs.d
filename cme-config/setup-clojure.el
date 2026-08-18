@@ -1,3 +1,5 @@
+;;; -*- lexical-binding: t -*-
+
 ;;; -----------------------------------------------------------------------
 ;;; CLOJURE
 ;;; https://github.com/clojure-emacs/clojure-mode
