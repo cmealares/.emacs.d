@@ -195,81 +195,6 @@
   (setq esup-depth 0)) ; workaround bug on compiled files
 
 ;;; ----------------------------------------------------------------------
-;;; THEME
-;; https://batsov.com/articles/2012/02/19/color-theming-in-emacs-reloaded/
-;; http://emacsthemes.com/
-;;; ----------------------------------------------------------------------
-(let ((themes-dir (locate-user-emacs-file "themes")))
-  (setq custom-theme-directory themes-dir))
-
-(unless (package-installed-p 'zenburn-theme)
-  (package-install 'zenburn-theme))
-
-(unless (package-installed-p 'spacemacs-theme)
-  (package-install 'spacemacs-theme))
-
-(unless (package-installed-p 'ef-themes)
-  (package-install 'ef-themes))
-
-(load-theme 'montmirail t)
-;; use disable-theme to turn off
-
-;;(use-package ef-themes
-;;  :ensure nil
-;;  :config
-;;  (ef-themes-load-theme 'ef-orange))
-
-;;; ----------------------------------------------------------------------
-;;; THE FONT
-;; What facet is used? describe-face
-;; What font is used? describe-char and look at line in "display"
-;; Frame properties. To display all: (prin1-to-string (frame-parameters))
-;; List all fonts (print (font-family-list))
-;; List all loaded faces: list-faces-display
-;; Show all attributes of a face (print (face-all-attributes 'default))
-;;; ----------------------------------------------------------------------
-
-;; Some free fonts:
-;;    Monospaced
-;;       firacode
-;;       cascadia code
-;;       source code pro
-;;       code new roman
-;;       roboto mono
-;;       jetbrains mono
-;;       ubuntu mono
-;;       mononoki
-;;       iosevka
-;;    Variable width:
-;;       cantarell
-
-(defconst cme-monospaced-font
-  (cond
-   ((find-font (font-spec :name "Fira Code")) "Fira Code")
-   ((find-font (font-spec :name "Cascadia Code")) "Cascadia Code")
-   ((find-font (font-spec :name "Source Code Pro")) "Source Code Pro")
-   ((find-font (font-spec :name "Consolas")) "Consolas")
-   ((find-font (font-spec :name "DejaVu Sans Mono")) "DejaVu Sans Mono")
-   (t (progn (message "Cannot find a monospaced font") nil) )))
-
-(when cme-monospaced-font
-  ;; default font must have a fixed height
-  ;; others fonts must be relative (float)
-  (set-face-attribute 'default nil :height 120 :font cme-monospaced-font)
-  ;; fixed pitch face
-  (set-face-attribute 'fixed-pitch nil :height 1.0 :font cme-monospaced-font) )
-
-(defconst cme-proportional-font
-  (cond
-   ;; bad stars in org mode ((find-font (font-spec :name "Cantarell")) "Cantarell")
-   ;; idem ((find-font (font-spec :name "Lucida Sans Unicode")) "Lucida Sans Unicode")
-   (t (progn (message "Cannot find a proportional font") cme-monospaced-font) )))
-
-(when cme-proportional-font ;;  used in org mode setup
-  ;; variable pitch face
-  (set-face-attribute 'variable-pitch nil :height 1.0 :font cme-proportional-font))
-
-;;; ----------------------------------------------------------------------
 ;;; ENCODING and UNICODE - use UTF-8
 ;; Inserting characters
 ;;     insert-char C-x 8 <RET>
@@ -303,6 +228,21 @@
      (mapcar (lambda (x) (format "%X" x))  decimal))))
 
 ;;; ----------------------------------------------------------------------
+;;; ISPELL
+;;; ----------------------------------------------------------------------
+(setq ispell-program-name "aspell")
+(setq ispell-dictionary "francais")
+
+;;; ----------------------------------------------------------------------
+;;; HUNGRY DELETE
+;;; ----------------------------------------------------------------------
+(use-package hungry-delete
+  :ensure t
+  :defer 1
+  :diminish hungry-delete-mode
+  :config (global-hungry-delete-mode))
+
+;;; ----------------------------------------------------------------------
 ;;; DELSEL
 ;; Delete the selected text as soon as the user types something
 ;;; ----------------------------------------------------------------------
@@ -331,12 +271,6 @@
 (use-package rainbow-delimiters
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
-
-;;; ----------------------------------------------------------------------
-;;; ISPELL
-;;; ----------------------------------------------------------------------
-(setq ispell-program-name "aspell")
-(setq ispell-dictionary "francais")
 
 ;;; ----------------------------------------------------------------------
 ;;; ISEARCH
@@ -401,15 +335,6 @@
    ("t" toggle-truncate-lines "truncate")
    ("w" whitespace-mode "whitespace")
    ("q" nil "cancel")))
-
-;;; ----------------------------------------------------------------------
-;;; HUNGRY DELETE
-;;; ----------------------------------------------------------------------
-(use-package hungry-delete
-  :ensure t
-  :defer 1
-  :diminish hungry-delete-mode
-  :config (global-hungry-delete-mode))
 
 ;;; ----------------------------------------------------------------------
 ;;; THE MINIBUFFER
@@ -944,6 +869,7 @@ _k_: down      _a_: all           _q_: quit
 ;;; ----------------------------------------------------------------------
 ;;; LOAD OTHER CONFIG FILES
 ;;; ----------------------------------------------------------------------
+(load "setup-theme.el")
 (load "setup-misc-functions.el")
 (load "setup-windows.el")
 (load "setup-dired.el")

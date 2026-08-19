@@ -123,3 +123,86 @@
         (windmove-find-other-window 'up))
       (shrink-window arg)
     (enlarge-window arg)))
+
+;;; -----------------------------------------------------------------------
+;;;; http://www.emacswiki.org/emacs/MoveRegion
+;;; -----------------------------------------------------------------------
+(defun cme-move-region (start end n)
+  "Move the current region up or down by N lines."
+  (interactive "r\np")
+  (let ((line-text (delete-and-extract-region start end)))
+    (forward-line n)
+    (let ((start (point)))
+      (insert line-text)
+      (setq deactivate-mark nil)
+      (set-mark start))))
+
+(defun cme-move-region-up (start end n)
+  "Move the current line up by N lines."
+  (interactive "r\np")
+  (cme-move-region start end (if (null n) -1 (- n))))
+
+(defun cme-move-region-down (start end n)
+  "Move the current line down by N lines."
+  (interactive "r\np")
+  (cme-move-region start end (if (null n) 1 n)))
+
+(global-set-key (kbd "M-<up>") 'cme-move-region-up)
+(global-set-key (kbd "M-<down>") 'cme-move-region-down)
+
+;;; -----------------------------------------------------------------------
+;;;; More functions on buffers
+;;; -----------------------------------------------------------------------
+(defun cme-rename-file-and-buffer (new-name)
+  "Renames both current buffer and file it's visiting to NEW-NAME."
+  (interactive "sNew name: ")
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+      (if (get-buffer new-name)
+          (message "A buffer named '%s' already exists!" new-name)
+        (progn
+          (rename-file name new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil))))))
+
+(defun cme-move-buffer-file (dir)
+  "Moves both current buffer and file it's visiting to DIR."
+  (interactive "DNew directory: ")
+  (let* ((name (buffer-name))
+         (filename (buffer-file-name))
+         (dir
+          (if (string-match dir "\\(?:/\\|\\\\)$")
+              (substring dir 0 -1) dir))
+         (newname (concat dir "/" name)))
+
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+      (progn
+        (copy-file filename newname 1)
+        (delete-file filename)
+        (set-visited-file-name newname)
+        (set-buffer-modified-p nil)
+        t))))
+
+;; http://emacsredux.com/blog/2013/03/27/copy-filename-to-the-clipboard/
+(defun cme-copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+
+(defun cme-revert-all-buffers ()
+  "Refreshes all open buffers from their respective files"
+  (interactive)
+  (dolist (buf (buffer-list))
+    (unless (null (buffer-file-name buf))
+      (set-buffer (buffer-name buf))
+      (revert-buffer t t)))
+  (message "All buffers reverted!"))
