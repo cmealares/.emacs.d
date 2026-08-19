@@ -82,48 +82,6 @@
   :config
   (windmove-default-keybindings))
 
-(global-set-key
- (kbd "C-M-s")
- (defhydra hydra-splitter ()
-   "Move window splitter"
-   ("<left>" hydra-move-splitter-left "left")
-   ("<down>" hydra-move-splitter-down "down")
-   ("<up>" hydra-move-splitter-up "up")
-   ("<right>" hydra-move-splitter-right "right")
-   ("s" window-swap-states "swap windows" :color blue)))
-
-(defun hydra-move-splitter-left (arg)
-  "Move window splitter (ARG) left."
-  (interactive "p")
-  (if (let ((windmove-wrap-around))
-        (windmove-find-other-window 'right))
-      (shrink-window-horizontally arg)
-    (enlarge-window-horizontally arg)))
-
-(defun hydra-move-splitter-right (arg)
-  "Move window splitter (ARG) right."
-  (interactive "p")
-  (if (let ((windmove-wrap-around))
-        (windmove-find-other-window 'right))
-      (enlarge-window-horizontally arg)
-    (shrink-window-horizontally arg)))
-
-(defun hydra-move-splitter-up (arg)
-  "Move window splitter (ARG) up."
-  (interactive "p")
-  (if (let ((windmove-wrap-around))
-        (windmove-find-other-window 'up))
-      (enlarge-window arg)
-    (shrink-window arg)))
-
-(defun hydra-move-splitter-down (arg)
-  "Move window splitter (ARG) down."
-  (interactive "p")
-  (if (let ((windmove-wrap-around))
-        (windmove-find-other-window 'up))
-      (shrink-window arg)
-    (enlarge-window arg)))
-
 ;;; -----------------------------------------------------------------------
 ;;;; http://www.emacswiki.org/emacs/MoveRegion
 ;;; -----------------------------------------------------------------------

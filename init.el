@@ -18,10 +18,6 @@
 ;; C-x r <SPC>          store mark into register; j to jump
 ;; C-x r m              set bookmark; b to jump
 ;;
-;;; -- Repeat command
-;; C-x z z z z          repeat
-;; C-x Esc Esc          repeat-complex-command.  M-p M-n move in history
-;;
 ;; -- Edition / navigation
 ;; C-M-a/e              Move to beginning/end of defun
 ;; C-M-n/p              Move forward across one balanced group of parentheses.
@@ -314,6 +310,17 @@
   :config
   (setq save-place-file (locate-user-emacs-file "saveplace"))
   (save-place-mode 1))
+
+;;; ----------------------------------------------------------------------
+;;; REPEAT
+;; https://emacsredux.com/blog/2026/04/04/repeat-mode/
+;; See how to add commands to the repeat map
+;; -- Standard commands:
+;; C-x z z z z          repeat
+;; C-x Esc Esc          repeat-complex-command.  M-p M-n move in history
+;;; ----------------------------------------------------------------------
+(repeat-mode 1)
+(setq repeat-exit-timeout 5)
 
 ;;; ----------------------------------------------------------------------
 ;;; HYDRA
@@ -963,3 +970,4 @@ _k_: down      _a_: all           _q_: quit
 (defalias 'eb    'ediff-buffers)
 
 (defalias 'ffap  'find-file-at-point)
+(defalias 'ws    'window-swap-states)
