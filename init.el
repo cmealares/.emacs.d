@@ -113,6 +113,11 @@
 ;; blink cursor
 (blink-cursor-mode 0)
 
+;; Delete the selected text as soon as the user types something
+(delete-selection-mode 1)
+
+
+
 ;; ----------------------------------------------------------------------
 ;; What's the system
 ;; ----------------------------------------------------------------------
@@ -233,14 +238,6 @@
   :defer 1
   :diminish hungry-delete-mode
   :config (global-hungry-delete-mode))
-
-;; ----------------------------------------------------------------------
-;; DELSEL
-;; Delete the selected text as soon as the user types something
-;; ----------------------------------------------------------------------
-(use-package delsel
-  :ensure nil ; it is built-in
-  :hook (after-init . delete-selection-mode))
 
 ;; ----------------------------------------------------------------------
 ;; MODELINE
@@ -885,11 +882,13 @@ _k_: down      _a_: all           _q_: quit
 ;; START SERVER
 ;; ----------------------------------------------------------------------
 (use-package server
-  :ensure nil
+  :ensure nil ; built in
   :defer 1
-  :config
-  (unless (server-running-p)
-    (server-start)))
+  :hook
+  (after-init .
+              (lambda ()
+                (unless (server-running-p)
+                  (server-start)) )))
 
 ;; ----------------------------------------------------------------------
 ;; TIE SOME FILE EXTENSIONS TO MODES
